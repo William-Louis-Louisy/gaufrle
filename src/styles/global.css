@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  font-family: "Roboto", "Oxygen", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: inherit;
+}
+
+body {
+  height: 100dvh;
+}
+
+/** CUSTOM TAILWIND STYLES **/
+.theme-text {
+  @apply text-txtLight dark:text-txtDark;
+}
+
+.theme-bg {
+  @apply bg-bgLight dark:bg-bgDark;
+}
+
+.theme-lmnt {
+  @apply bg-lmntLight dark:bg-lmntDark;
+}
+
+.theme-header {
+  @apply w-full h-16 px-16 flex flex-row justify-between items-center;
+}
