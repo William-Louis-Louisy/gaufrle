@@ -1,5 +1,12 @@
 export interface IGameCell {
-  id: string;
+  row: number;
+  col: number;
   letter: string;
-  status: "default" | "yellow" | "green";
+  onMove: (
+    sourceRow: number,
+    sourceCol: number,
+    destRow: number,
+    destCol: number
+  ) => void;
+  status: string;
 }

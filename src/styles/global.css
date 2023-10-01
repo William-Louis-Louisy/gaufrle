@@ -15,6 +15,13 @@ body {
   height: 100dvh;
 }
 
+.grid-container {
+  display: grid;
+  width: 280px;
+  grid-template-rows: repeat(5, 1fr);
+  grid-template-columns: repeat(5, 1fr);
+}
+
 /** CUSTOM TAILWIND STYLES **/
 .theme-text {
   @apply text-txtLight dark:text-txtDark;
@@ -30,4 +37,24 @@ body {
 
 .theme-header {
   @apply w-full h-16 px-16 flex flex-row justify-between items-center;
+}
+
+.cell {
+  @apply flex justify-center items-center text-2xl font-bold w-14 h-14 rounded-md m-1 uppercase;
+}
+
+.disabled-cell {
+  @apply theme-bg cell;
+}
+
+.normal-cell {
+  @apply theme-lmnt cell cursor-pointer;
+}
+
+.correct-cell {
+  @apply bg-valid cell;
+}
+
+.line-or-column-cell {
+  @apply bg-almostValid cell;
 }

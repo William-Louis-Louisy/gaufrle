@@ -25,6 +25,12 @@ module.exports = {
 
         // Moon
         moon: "#FBCC60",
+
+        // Valid
+        valid: "#38b000",
+
+        // Almost valid
+        almostValid: "#ffc300",
       },
     },
   },

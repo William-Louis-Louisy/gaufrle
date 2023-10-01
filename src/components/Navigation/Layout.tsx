@@ -15,7 +15,9 @@ export default function Layout({ children }: LayoutProps) {
       {/* Sidebar */}
       {/* <Sidebar /> */}
       {/* Main */}
-      <main className="min-h-screen theme-bg theme-text">{children}</main>
+      <main className="min-h-[calc(100vh-64px)] theme-bg theme-text">
+        {children}
+      </main>
       {/* Footer */}
       <Footer />
     </>

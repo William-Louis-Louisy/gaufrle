@@ -1,0 +1,410 @@
+[
+  {
+    "id": "6512adb8a09028c409178998",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["aboye", "reera", "saris", "abris", "obeir", "ebats"]
+  },
+  {
+    "id": "6512adb8b5dfe055c116c230",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["acnes", "rebab", "subit", "acras", "nabab", "sabot"]
+  },
+  {
+    "id": "6512adb80b7acdff028b4576",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["adage", "ecima", "tauda", "adent", "adieu", "ecala"]
+  },
+  {
+    "id": "6512adb802153fa39468cd50",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["adire", "muera", "taxat", "admet", "iceux", "ecart"]
+  },
+  {
+    "id": "6512adb8a72d5a7a9499e99b",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["aeras", "rebec", "theme", "aerat", "rable", "sacre"]
+  },
+  {
+    "id": "6512adb8b4550c62ac791390",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["agace", "aneth", "entat", "agave", "agent", "echat"]
+  },
+  {
+    "id": "6512adb867b6f4a37c2323c2",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["agita", "iroko", "eleva", "agite", "icone", "agora"]
+  },
+  {
+    "id": "6512adb88ead10058976248f",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["ahuri", "deust", "idees", "aidai", "ulule", "ictus"]
+  },
+  {
+    "id": "6512adb833fa0861041e2805",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["ailee", "labri", "salee", "ailes", "label", "ecime"]
+  },
+  {
+    "id": "6512adb828584fd1ed862c41",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["alpha", "picot", "nases", "alpin", "pacas", "altos"]
+  },
+  {
+    "id": "6512adb827ace36350b8284d",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["amers", "inoui", "sushi", "amies", "ecots", "saisi"]
+  },
+  {
+    "id": "6512adb8735d7ca5cac20730",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["aorte", "eider", "ogive", "apero", "radai", "ecrie"]
+  },
+  {
+    "id": "6512adb8f44782fba747893d",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["aphte", "liber", "tatin", "aplat", "habit", "ecrin"]
+  },
+  {
+    "id": "6512adb8cc7a35ea5089a601",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["appui", "recru", "siens", "apres", "pacse", "igues"]
+  },
+  {
+    "id": "6512adb82f7734940dae2bbf",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["archi", "dobra", "edams", "ardue", "cabla", "ikats"]
+  },
+  {
+    "id": "6512adb83f9cf8dfc7f0a075",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["arene", "garer", "neume", "argan", "ecrou", "ecrue"]
+  },
+  {
+    "id": "6512adb8a7a89f0fe737f124",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["argue", "goder", "sanas", "argus", "gadin", "ecrus"]
+  },
+  {
+    "id": "6512adb880ed8a1423293fe3",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["asile", "sceau", "zeste", "assez", "ileus", "ecule"]
+  },
+  {
+    "id": "6512adb87302cfa1ab6b6465",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["aubes", "cucul", "niees", "aucun", "bache", "sales"]
+  },
+  {
+    "id": "6512adb80bdaccbdda369a1f",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["avait", "avare", "avens", "avala", "avale", "taels"]
+  },
+  {
+    "id": "6512adb8b72af47a2c6e43ef",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["avere", "eliai", "siera", "avers", "edile", "edita"]
+  },
+  {
+    "id": "6512adb8857d52e5b6be1871",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["axant", "eteuf", "situe", "axees", "axent", "taffe"]
+  },
+  {
+    "id": "6512adb83b95bcc8b5e7754b",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["baffe", "ficha", "egara", "bafre", "facha", "egala"]
+  },
+  {
+    "id": "6512adb873214a116e4661b3",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["bales", "local", "enter", "balle", "lacet", "salir"]
+  },
+  {
+    "id": "6512adb8a1fb2f984d50d3af",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["banco", "nodal", "sprat", "bancs", "nadir", "oblat"]
+  },
+  {
+    "id": "6512adb8695d6d6d25f5646a",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["barde", "radia", "sassa", "bards", "rades", "egaya"]
+  },
+  {
+    "id": "6512adb809f77f28a9f9e14d",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["barjo", "radio", "niebe", "baron", "radie", "obole"]
+  },
+  {
+    "id": "6512adb89792b730df5900a0",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["baste", "talee", "irais", "batai", "salua", "ejets"]
+  },
+  {
+    "id": "6512adb882fc4cc743a448b1",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["baume", "vitra", "iules", "bavai", "untel", "elans"]
+  },
+  {
+    "id": "6512adb83bbb283c127d87b0",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["becte", "gicle", "emois", "begue", "cacao", "eleis"]
+  },
+  {
+    "id": "6512adb83d70706bbf92c702",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["beton", "tolai", "elies", "bette", "talai", "naias"]
+  },
+  {
+    "id": "6512adb8233a84bea4f7ec0f",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["birbe", "reglo", "scare", "birrs", "ragua", "eloxe"]
+  },
+  {
+    "id": "6512adb89b0f17cd1f9d6df2",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["bongo", "nonce", "sinon", "bonis", "nanan", "ocean"]
+  },
+  {
+    "id": "6512adb8a8e4ec9f6088b560",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["bonne", "nanti", "errer", "bonte", "nanar", "emier"]
+  },
+  {
+    "id": "6512adb889aa49560523badf",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["borde", "roidi", "jains", "bordj", "raidi", "emies"]
+  },
+  {
+    "id": "6512adb8929ed199eb2a2468",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["bossu", "tauon", "skats", "botes", "saura", "urnes"]
+  },
+  {
+    "id": "6512adb87c7d135bb18b7b1e",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["brens", "enfeu", "taree", "brent", "enfer", "sauve"]
+  },
+  {
+    "id": "6512adb8577c7f9717854f16",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["broue", "outil", "malle", "broum", "octal", "enlie"]
+  },
+  {
+    "id": "6512adb8ca3f764b7d031577",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["busai", "skiff", "situa", "busas", "sciat", "infra"]
+  },
+  {
+    "id": "6512adb894d5a45bba9db683",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["cakti", "loden", "issue", "calai", "kadis", "innee"]
+  },
+  {
+    "id": "6512adb8cb0883edd41d6aca",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["calez", "lamez", "seins", "calfs", "lamai", "zizis"]
+  },
+  {
+    "id": "6512adb8f9e049ab44f9ed92",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["calle", "lampa", "sutes", "calls", "lamat", "epars"]
+  },
+  {
+    "id": "6512adb82f9e7ac083cb2838",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["calmi", "liman", "steps", "calos", "lamee", "innes"]
+  },
+  {
+    "id": "6512adb85daa2793e41322ea",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["campo", "megie", "seton", "camps", "magot", "odeon"]
+  },
+  {
+    "id": "6512adb862edd054c97fea14",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["canar", "natel", "selfs", "canas", "natal", "ralas"]
+  },
+  {
+    "id": "6512adb82c7c163c093404fc",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["carde", "relui", "tarat", "caret", "raler", "epiat"]
+  },
+  {
+    "id": "6512adb89235a301dd2887e5",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["casai", "sucat", "soeur", "casas", "seche", "inter"]
+  },
+  {
+    "id": "6512adb840c53673d36ef6ae",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["casee", "sucai", "risee", "caser", "secus", "epiee"]
+  },
+  {
+    "id": "6512adb8075328179c31b36e",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["catas", "tepui", "harde", "catch", "tapir", "seine"]
+  },
+  {
+    "id": "6512adb8880f71bd06de951f",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["catin", "tipez", "rates", "catir", "tapit", "nazis"]
+  },
+  {
+    "id": "6512adb888303dfd9e293ea2",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["ciron", "repic", "exils", "cirre", "rapai", "necks"]
+  },
+  {
+    "id": "6512adb8a199dfdc8521ea4c",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["conte", "panca", "luire", "copal", "nenni", "etame"]
+  },
+  {
+    "id": "6512adb8ebba02bc67bdfee7",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["corse", "roqua", "orant", "corso", "raqua", "etant"]
+  },
+  {
+    "id": "6512adb82f852848acf51a3f",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["cotez", "titan", "etres", "cotie", "tatar", "zonas"]
+  },
+  {
+    "id": "6512adb82645695d13536700",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["cotit", "tetat", "nette", "coton", "tatat", "tatee"]
+  },
+  {
+    "id": "6512adb892709ba2ab57bdd3",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["culez", "lopin", "thete", "culot", "lapse", "zonee"]
+  },
+  {
+    "id": "6512adb8f890dda9709df041",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["curee", "rosat", "rires", "curer", "raser", "eutes"]
+  },
+  {
+    "id": "6512adb86e44632218896385",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["devin", "valsa", "smalt", "devis", "valga", "niait"]
+  },
+  {
+    "id": "6512adb83e0a5b36f1d2cc14",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["devon", "villa", "tient", "devot", "valse", "niant"]
+  },
+  {
+    "id": "6512adb8d80f39d8e7600592",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["dites", "vexai", "nolis", "divan", "taxol", "slips"]
+  },
+  {
+    "id": "6512adb8208ac57e4109644c",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["felas", "letal", "tends", "felat", "latin", "solos"]
+  },
+  {
+    "id": "6512adb8cd347075f1d5e6c8",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["feter", "tonic", "stent", "fetes", "tenge", "recit"]
+  },
+  {
+    "id": "6512adb83948fd4047509bbe",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["filao", "levai", "spire", "filas", "lavai", "opine"]
+  },
+  {
+    "id": "6512adb843874225283836b4",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["gigas", "gogea", "tiede", "gigot", "gigue", "stase"]
+  },
+  {
+    "id": "6512adb8d81f4cdd45672173",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["golfs", "micro", "ornat", "gombo", "lecon", "stout"]
+  },
+  {
+    "id": "6512adb820b280d8b4f7a400",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["humas", "menai", "tinte", "humat", "manon", "suite"]
+  },
+  {
+    "id": "6512adb8f1c0d6adf9721353",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["jetas", "tiper", "tissa", "jetat", "tipas", "surfa"]
+  },
+  {
+    "id": "6512adb8e18325f5fdb81ec2",
+    "date": "2023-09-25",
+    "type": "normal",
+    "words": ["kaons", "paner", "kurde", "kapok", "orner", "syrte"]
+  }
+]
