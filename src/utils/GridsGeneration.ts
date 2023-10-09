@@ -1,7 +1,3 @@
-export const transpose = (matrix: string[][]): string[][] => {
-  return matrix[0].map((_, colIndex) => matrix.map((row) => row[colIndex]));
-};
-
 // GENERATE THE CORRECT GRID
 export const generateCorrectGrid2D = (words: string[]): string[][] => {
   // Initialize a 5x5 grid
@@ -35,7 +31,7 @@ export const generateCorrectGrid2D = (words: string[]): string[][] => {
     grid[row][col] = "❌";
   });
 
-  return transpose(grid);
+  return grid;
 };
 
 // GENERATE SHUFFLED GRID

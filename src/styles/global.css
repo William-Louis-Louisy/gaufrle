@@ -5,7 +5,7 @@
 * {
   box-sizing: border-box;
   margin: 0;
-  font-family: "Roboto", "Oxygen", sans-serif;
+  font-family: "Titillium Web", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: inherit;
@@ -15,11 +15,48 @@ body {
   height: 100dvh;
 }
 
+h1,
+h2,
+h3 {
+  font-family: "Russo One", sans-serif;
+}
+
+.logo-font {
+  font-family: "Russo One", sans-serif;
+}
+
 .grid-container {
   display: grid;
   width: 280px;
   grid-template-rows: repeat(5, 1fr);
   grid-template-columns: repeat(5, 1fr);
+}
+
+@keyframes blink {
+  0% {
+    background-color: #35c6ea;
+  }
+  14% {
+    background-color: #9252d7;
+  }
+  28% {
+    background-color: #8689d9;
+  }
+  42% {
+    background-color: #33658a;
+  }
+  56% {
+    background-color: #35c6ea;
+  }
+  70% {
+    background-color: #8689d9;
+  }
+  84% {
+    background-color: #9252d7;
+  }
+  100% {
+    background-color: #f218b8;
+  }
 }
 
 /** CUSTOM TAILWIND STYLES **/
@@ -31,16 +68,32 @@ body {
   @apply bg-bgLight dark:bg-bgDark;
 }
 
+.theme-bg-inverse {
+  @apply bg-bgDark dark:bg-bgLight;
+}
+
+.theme-divider {
+  @apply theme-bg-inverse w-11/12 py-[0.5px];
+}
+
 .theme-lmnt {
   @apply bg-lmntLight dark:bg-lmntDark;
 }
 
 .theme-header {
-  @apply w-full h-16 px-16 flex flex-row justify-between items-center;
+  @apply w-full h-16 px-4 md:px-[10%] flex flex-row justify-between items-center;
+}
+
+.theme-footer {
+  @apply w-full h-10 px-8 flex flex-row justify-center items-center theme-lmnt theme-text text-sm;
+}
+
+.theme-nav-border {
+  @apply border-b-4 border-transparent hover:border-txtLight dark:hover:border-txtDark hover:border-b-4;
 }
 
 .cell {
-  @apply flex justify-center items-center text-2xl font-bold w-14 h-14 rounded-md m-1 uppercase;
+  @apply flex justify-center items-center w-10 h-10 md:text-2xl font-bold md:w-14 md:h-14 rounded-md m-1 uppercase;
 }
 
 .disabled-cell {
@@ -57,4 +110,21 @@ body {
 
 .line-or-column-cell {
   @apply bg-almostValid cell;
+}
+
+.main-view {
+  @apply min-h-[calc(100vh-64px)] theme-bg theme-text flex flex-col justify-center items-center;
+}
+
+.blink-cell {
+  @apply cell;
+  animation: blink 2s infinite;
+}
+
+.nav-link {
+  @apply font-bold px-3 h-full flex justify-center items-center theme-nav-border;
+}
+
+.logo {
+  @apply theme-text text-xl md:text-2xl logo-font;
 }

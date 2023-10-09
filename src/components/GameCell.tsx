@@ -4,9 +4,18 @@ import { IGameCell } from "../types/GameCell";
 
 const ItemType = "CELL";
 
-function GameCell({ row, col, letter, onMove, status }: IGameCell) {
-  const index = row * 5 + col; // Transform 2D index to 1D
-  const isNonPlayable = [6, 8, 16, 18].includes(index);
+function GameCell({
+  row,
+  col,
+  letter,
+  onMove,
+  status,
+  isGridSolved,
+  nonPlayableCells,
+  indexValue,
+}: IGameCell) {
+  const index = row * indexValue + col;
+  const isNonPlayable = nonPlayableCells.includes(index);
 
   const [, ref] = useDrop({
     accept: ItemType,
@@ -17,7 +26,7 @@ function GameCell({ row, col, letter, onMove, status }: IGameCell) {
     },
   });
 
-  const [{ isDragging }, drag, preview] = useDrag({
+  const [{ isDragging }, drag] = useDrag({
     type: ItemType,
     item: { row, col },
     canDrag: !isNonPlayable,
@@ -39,10 +48,11 @@ function GameCell({ row, col, letter, onMove, status }: IGameCell) {
 
   return (
     <div
-      className={getCellClass()}
+      className={`${getCellClass()} ${isGridSolved ? "blink-cell" : ""}`}
       ref={isNonPlayable ? undefined : (node) => drag(ref(node))}
       style={{
         opacity: isDragging ? 0.5 : 1,
+        animationDelay: isGridSolved ? `${index * 0.2}s` : "0s", // Ajouter un délai basé sur l'index
       }}
     >
       {letter}

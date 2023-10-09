@@ -9,4 +9,7 @@ export interface IGameCell {
     destCol: number
   ) => void;
   status: string;
+  isGridSolved: boolean;
+  nonPlayableCells: any;
+  indexValue: number;
 }
