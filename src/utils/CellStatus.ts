@@ -1,69 +1,152 @@
-import { generateCorrectGrid2D } from "./GridsGeneration";
-
-// COUNT LETTER OCCURRENCES
-const countLetterOccurrences = (arr: string[], letter: string) => {
-  return arr.filter((l) => l === letter).length;
+// Metadonnées pour chaque type de grille
+export const gridMetadata = {
+  normal: {
+    nonPlayableCells: [6, 8, 16, 18],
+    words: [
+      [0, 1, 2, 3, 4],
+      [10, 11, 12, 13, 14],
+      [20, 21, 22, 23, 24],
+      [0, 5, 10, 15, 20],
+      [2, 7, 12, 17, 22],
+      [4, 9, 14, 19, 24],
+    ],
+  },
+  medium: {
+    nonPlayableCells: [
+      0, 1, 2, 4, 5, 6, 7, 13, 14, 16, 18, 20, 28, 30, 32, 34, 35, 41, 42, 43,
+      44, 46, 47, 48,
+    ],
+    words: [
+      [8, 9, 10, 11, 12],
+      [21, 22, 23, 24, 25, 26, 27],
+      [36, 37, 38, 39, 40],
+      [8, 15, 22, 29, 36],
+      [3, 10, 17, 24, 31, 38, 45],
+      [12, 19, 26, 33, 40],
+    ],
+  },
+  hard: {
+    nonPlayableCells: [8, 10, 12, 22, 24, 26, 36, 38, 40],
+    words: [
+      [0, 1, 2, 3, 4, 5, 6],
+      [14, 15, 16, 17, 18, 19, 20],
+      [28, 29, 30, 31, 32, 33, 34],
+      [42, 43, 44, 45, 46, 47, 48],
+      [0, 7, 14, 21, 28, 35, 42],
+      [2, 9, 16, 23, 30, 37, 44],
+      [4, 11, 18, 25, 32, 39, 46],
+      [6, 13, 20, 27, 34, 41, 48],
+    ],
+  },
 };
 
-// VERIFY CELL STATUS
+// Fonction pour compter le nombre d'occurrences d'une lettre dans un mot
+const countOccurrences = (
+  letter: string,
+  wordIndices: number[],
+  correctGrid: string[][]
+) => {
+  return wordIndices.reduce(
+    (count, index) =>
+      correctGrid[Math.floor(index / correctGrid.length)][
+        index % correctGrid.length
+      ] === letter
+        ? count + 1
+        : count,
+    0
+  );
+};
+
+// Fonction principale pour vérifier le statut de chaque cellule
 export const verifyCellStatus = (
   newGridLetters: string[][],
   setCellStatus: any,
   correctGrid: string[][],
-  indexValue: number
+  gridType: "normal" | "medium" | "hard"
 ) => {
-  const newCellStatus = Array.from({ length: indexValue }, () =>
-    Array(indexValue).fill("default")
+  // Initialisation du statut des cellules à 'default'
+  const newCellStatus = Array.from({ length: correctGrid.length }, () =>
+    Array(correctGrid[0].length).fill("default")
   );
 
-  for (let i = 0; i < indexValue; i++) {
-    for (let j = 0; j < indexValue; j++) {
-      const letter = newGridLetters[i][j];
+  // Récupération des métadonnées pour le type de grille actuel
+  const metadata = gridMetadata[gridType];
 
-      if (correctGrid[i][j] === "❌") {
+  // Initialisation des compteurs pour le nombre d'occurrences de chaque lettre dans chaque mot
+  const letterCountInWords: Map<string, number> = new Map();
+  const correctLetterCountInWords: Map<string, number> = new Map();
+
+  // Première passe pour mettre à jour le nombre d'occurrences correctes de chaque lettre dans chaque mot
+  for (let i = 0; i < correctGrid.length; i++) {
+    for (let j = 0; j < correctGrid[i].length; j++) {
+      const index = i * correctGrid.length + j;
+
+      // Ignorer les cellules non jouables
+      if (metadata.nonPlayableCells.includes(index)) {
         continue;
       }
 
-      if (correctGrid[i][j] === letter) {
-        newCellStatus[i][j] = "correct";
-        continue;
-      }
+      const actualLetter = newGridLetters[i][j];
+      const correctLetter = correctGrid[i][j];
 
-      const isFalseRow = correctGrid[i].includes("❌");
-      const isFalseCol = correctGrid.some((row) => row[j] === "❌");
-
-      const rowOccurrences = countLetterOccurrences(correctGrid[i], letter);
-      const colOccurrences = countLetterOccurrences(
-        correctGrid.map((row) => row[j]),
-        letter
-      );
-
-      const actualRowOccurrences = countLetterOccurrences(
-        newGridLetters[i],
-        letter
-      );
-      const actualColOccurrences = countLetterOccurrences(
-        newGridLetters.map((row) => row[j]),
-        letter
-      );
-
-      const isInCorrectRow =
-        !isFalseRow &&
-        rowOccurrences >= actualRowOccurrences &&
-        correctGrid[i].includes(letter);
-      const isInCorrectCol =
-        !isFalseCol &&
-        colOccurrences >= actualColOccurrences &&
-        correctGrid.some((row) => row[j] === letter);
-
-      if (isInCorrectRow) {
-        newCellStatus[i][j] = "lineOrColumn";
-      } else if (isInCorrectCol) {
-        newCellStatus[i][j] = "lineOrColumn";
+      // Si la lettre est correcte, mettre à jour le compteur d'occurrences correctes pour cette lettre
+      if (actualLetter === correctLetter) {
+        for (const word of metadata.words) {
+          if (word.includes(index)) {
+            const key = `${word.join(",")}-${actualLetter}`;
+            const currentCorrectCount = correctLetterCountInWords.get(key) || 0;
+            correctLetterCountInWords.set(key, currentCorrectCount + 1);
+          }
+        }
       }
     }
   }
 
+  // Deuxième passe pour définir le statut de chaque cellule en fonction des compteurs mis à jour
+  for (let i = 0; i < correctGrid.length; i++) {
+    for (let j = 0; j < correctGrid[i].length; j++) {
+      const index = i * correctGrid.length + j;
+
+      // Ignorer les cellules non jouables
+      if (metadata.nonPlayableCells.includes(index)) {
+        continue;
+      }
+
+      const actualLetter = newGridLetters[i][j];
+      const correctLetter = correctGrid[i][j];
+
+      // Si la lettre est correcte, mettre à jour le statut de la cellule à 'correct'
+      if (actualLetter === correctLetter) {
+        newCellStatus[i][j] = "correct";
+        continue;
+      }
+
+      // Vérifier chaque mot pour déterminer le statut de la cellule
+      for (const word of metadata.words) {
+        if (word.includes(index)) {
+          const occurrencesInWord = countOccurrences(
+            actualLetter,
+            word,
+            correctGrid
+          );
+          const key = `${word.join(",")}-${actualLetter}`;
+          const currentCount = letterCountInWords.get(key) || 0;
+          const correctCount = correctLetterCountInWords.get(key) || 0;
+
+          // Calculer les occurrences disponibles pour cette lettre dans ce mot
+          const availableOccurrences = occurrencesInWord - correctCount;
+
+          // Si les occurrences disponibles sont supérieures au compteur actuel, mettre à jour le statut de la cellule à 'lineOrColumn'
+          if (availableOccurrences > 0 && availableOccurrences > currentCount) {
+            newCellStatus[i][j] = "lineOrColumn";
+            letterCountInWords.set(key, currentCount + 1);
+          }
+        }
+      }
+    }
+  }
+
+  // Mettre à jour l'état de l'application avec le nouveau statut des cellules
   setCellStatus(newCellStatus);
 };
 

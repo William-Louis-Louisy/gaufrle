@@ -48,11 +48,13 @@ function GameCell({
 
   return (
     <div
-      className={`${getCellClass()} ${isGridSolved ? "blink-cell" : ""}`}
+      className={`${getCellClass()} ${
+        isGridSolved && !isNonPlayable ? "blink-cell" : ""
+      }`}
       ref={isNonPlayable ? undefined : (node) => drag(ref(node))}
       style={{
         opacity: isDragging ? 0.5 : 1,
-        animationDelay: isGridSolved ? `${index * 0.2}s` : "0s", // Ajouter un délai basé sur l'index
+        animationDelay: isGridSolved ? `${index * 0.25}s` : "0s", // Ajouter un délai basé sur l'index
       }}
     >
       {letter}

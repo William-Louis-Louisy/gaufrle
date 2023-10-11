@@ -8,15 +8,13 @@ import HardGamepage from "../pages/HardGamepage";
 
 export default function PublicRoutes() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Homepage />} />
-        <Route path="/normal-game" element={<NormalGamepage />} />
-        <Route path="/medium-game" element={<MediumGamepage />} />
-        <Route path="/hard-game" element={<HardGamepage />} />
+    <Routes>
+      <Route path="/" element={<Homepage />} />
+      <Route path="/normal-game" element={<NormalGamepage />} />
+      <Route path="/medium-game" element={<MediumGamepage />} />
+      <Route path="/hard-game" element={<HardGamepage />} />
 
-        <Route path="*" element={<Errorpage />} />
-      </Routes>
-    </BrowserRouter>
+      <Route path="*" element={<Errorpage />} />
+    </Routes>
   );
 }

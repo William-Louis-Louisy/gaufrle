@@ -59,9 +59,25 @@ h3 {
   }
 }
 
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(-25%);
+    animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+  }
+  50% {
+    transform: none;
+    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  }
+}
+
 /** CUSTOM TAILWIND STYLES **/
 .theme-text {
   @apply text-txtLight dark:text-txtDark;
+}
+
+.theme-text-accent {
+  @apply text-accntLight dark:text-accntDark;
 }
 
 .theme-bg {
@@ -70,6 +86,10 @@ h3 {
 
 .theme-bg-inverse {
   @apply bg-bgDark dark:bg-bgLight;
+}
+
+.theme-border {
+  @apply border-2 border-txtLight dark:border-txtDark;
 }
 
 .theme-divider {
@@ -92,6 +112,22 @@ h3 {
   @apply border-b-4 border-transparent hover:border-txtLight dark:hover:border-txtDark hover:border-b-4;
 }
 
+.theme-nav-border-accnt {
+  @apply border-b-4 border-accntLight dark:border-accntDark;
+}
+
+.theme-shadow {
+  @apply shadow-xl dark:shadow-lmntDark;
+}
+
+.home-card {
+  @apply theme-lmnt cursor-pointer w-full md:w-1/4 p-4 rounded-md flex flex-col items-center justify-center theme-border relative theme-shadow;
+}
+
+.home-card-title {
+  @apply absolute theme-bg w-full bottom-0 left-0 p-4 font-semibold flex flex-row items-center justify-between rounded-b-md;
+}
+
 .cell {
   @apply flex justify-center items-center w-10 h-10 md:text-2xl font-bold md:w-14 md:h-14 rounded-md m-1 uppercase;
 }
@@ -112,19 +148,31 @@ h3 {
   @apply bg-almostValid cell;
 }
 
+.mini-cell {
+  @apply w-4 h-4 rounded-sm m-0.5;
+}
+
+.mini-normal-cell {
+  @apply theme-bg mini-cell border border-txtLight dark:border-txtDark;
+}
+
+.mini-disabled-cell {
+  @apply theme-lmnt mini-cell;
+}
+
 .main-view {
   @apply min-h-[calc(100vh-64px)] theme-bg theme-text flex flex-col justify-center items-center;
 }
 
 .blink-cell {
   @apply cell;
-  animation: blink 2s infinite;
+  animation: blink 1s infinite;
 }
 
 .nav-link {
-  @apply font-bold px-3 h-full flex justify-center items-center theme-nav-border;
+  @apply font-bold px-3 h-full flex justify-center items-center;
 }
 
 .logo {
-  @apply theme-text text-xl md:text-2xl logo-font;
+  @apply theme-text-accent text-xl md:text-2xl logo-font;
 }

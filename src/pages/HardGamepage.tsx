@@ -45,7 +45,12 @@ function HardGamepage() {
       const generatedGrid = generateHardGrid2D(gameGrid.words);
       setCorrectGrid(generatedCorrectGrid);
       setGridLetters(generatedGrid);
-      verifyCellStatus(generatedGrid, setCellStatus, generatedCorrectGrid, 7);
+      verifyCellStatus(
+        generatedGrid,
+        setCellStatus,
+        generatedCorrectGrid,
+        "hard"
+      );
 
       // Calculate minimum moves
       const minMoves = findMinimumMoves(
@@ -81,7 +86,7 @@ function HardGamepage() {
       newGridLetters[sourceRow][sourceCol],
     ];
     setGridLetters(newGridLetters);
-    verifyCellStatus(newGridLetters, setCellStatus, correctGrid, 7);
+    verifyCellStatus(newGridLetters, setCellStatus, correctGrid, "hard");
 
     // Update remaining moves
     setRemainingMoves((prev) => prev - 1);
@@ -95,20 +100,12 @@ function HardGamepage() {
     if (!loading) {
       const isSolved = checkIfGridIsSolved(gridLetters, correctGrid);
       setIsGridSolved(isSolved);
-
-      // if (isSolved) {
-      //   alert("Bravo, vous avez résolu la grille !");
-      // }
     }
   }, [gridLetters, correctGrid]);
 
   if (loading) {
     return <Loading />;
   }
-
-  console.log("CORRECT GRID : ", correctGrid);
-  console.log("ACTUAL GRID : ", gridLetters);
-  console.log("CELL STATUS : ", cellStatus);
 
   return (
     <DndProvider backend={HTML5Backend}>
@@ -121,11 +118,13 @@ function HardGamepage() {
           indexValue={7}
           nonPlayableCells={[8, 10, 12, 22, 24, 26, 36, 38, 40]}
         />
-        <h1 className="font-bold">Mouvements restants : {remainingMoves}</h1>
+        <span className="font-bold">
+          Mouvements restants : {remainingMoves}
+        </span>
         {isGridSolved && (
-          <h1 className="font-bold uppercase text-lg blink-text">
+          <span className="font-bold uppercase text-lg theme-text-accent">
             Félicitations !!!
-          </h1>
+          </span>
         )}
       </div>
     </DndProvider>

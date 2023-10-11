@@ -36,7 +36,12 @@ function MediumGamepage() {
       const generatedGrid = generateMediumGrid2D(gameGrid.words);
       setCorrectGrid(generatedCorrectGrid);
       setGridLetters(generatedGrid);
-      verifyCellStatus(generatedGrid, setCellStatus, generatedCorrectGrid, 7);
+      verifyCellStatus(
+        generatedGrid,
+        setCellStatus,
+        generatedCorrectGrid,
+        "medium"
+      );
 
       // Calculate minimum moves
       const minMoves = findMinimumMoves(
@@ -71,7 +76,7 @@ function MediumGamepage() {
       newGridLetters[sourceRow][sourceCol],
     ];
     setGridLetters(newGridLetters);
-    verifyCellStatus(newGridLetters, setCellStatus, correctGrid, 7);
+    verifyCellStatus(newGridLetters, setCellStatus, correctGrid, "medium");
 
     // Update remaining moves
     setRemainingMoves((prev) => prev - 1);
@@ -84,21 +89,13 @@ function MediumGamepage() {
   useEffect(() => {
     if (!loading) {
       const isSolved = checkIfGridIsSolved(gridLetters, correctGrid);
-      // setIsGridSolved(isSolved);
-
-      // if (isSolved) {
-      //   alert("Bravo, vous avez résolu la grille !");
-      // }
+      setIsGridSolved(isSolved);
     }
   }, [gridLetters, correctGrid]);
 
   if (loading) {
     return <Loading />;
   }
-
-  console.log("CORRECT GRID : ", correctGrid);
-  console.log("ACTUAL GRID : ", gridLetters);
-  console.log("CELL STATUS : ", cellStatus);
 
   return (
     <DndProvider backend={HTML5Backend}>
@@ -114,11 +111,13 @@ function MediumGamepage() {
             43, 44, 46, 47, 48,
           ]}
         />
-        <h1 className="font-bold">Mouvements restants : {remainingMoves}</h1>
+        <span className="font-bold">
+          Mouvements restants : {remainingMoves}
+        </span>
         {isGridSolved && (
-          <h1 className="font-bold uppercase text-lg blink-text">
+          <span className="font-bold uppercase text-lg theme-text-accent">
             Félicitations !!!
-          </h1>
+          </span>
         )}
       </div>
     </DndProvider>

@@ -23,7 +23,9 @@ function HowToPlayModal({ modal, setModal }: HowToPlayModalProps) {
           <div className="m-5 h-9 w-9">
             <span> </span>
           </div>
-          <h3 className="uppercase text-2xl">Comment jouer ?</h3>
+          <h3 className="uppercase text-2xl theme-text-accent">
+            Comment jouer ?
+          </h3>
           <button className="m-5" onClick={() => setModal(false)}>
             <IoCloseCircle className="theme-text text-4xl" />
           </button>

@@ -18,7 +18,8 @@ module.exports = {
         lmntDark: "#121213",
 
         // Accent
-        accnt: "#273469",
+        accntLight: "#1840E2",
+        accntDark: "#8598E5",
 
         // Sun
         sun: "#765403",
