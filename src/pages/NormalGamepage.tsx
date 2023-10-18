@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   generateCorrectGrid2D,
   generateNormalGrid2D,
@@ -6,22 +5,20 @@ import {
 import { DndProvider } from "react-dnd";
 import { useEffect, useState } from "react";
 import GameGrid from "../components/GameGrid";
+import { IGridData } from "../types/GameGrid";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { checkIfGridIsSolved, verifyCellStatus } from "../utils/CellStatus";
-import { findMinimumMoves } from "../utils/CalculateMoves";
 import Loading from "../components/Navigation/Loading";
+import { findMinimumMoves } from "../utils/CalculateMoves";
+import { checkIfGridIsSolved, verifyCellStatus } from "../utils/CellStatus";
+import CountDown from "../components/CountDown";
+import WordDefinitions from "../components/WordDefinitions";
 
 const MOVE_FACTOR = 1.25;
-const gameGrid = {
-  id: "6512adb8a09028c409178998",
-  date: "2023-09-25",
-  type: "normal",
-  words: ["aubes", "cucul", "niees", "aucun", "bache", "sales"],
-};
 
 export default function NormalGamepage() {
   // STATES
   const [loading, setLoading] = useState<boolean>(true);
+  const [todayGrid, setTodayGrid] = useState<IGridData>();
   const [remainingMoves, setRemainingMoves] = useState<number>(0);
   const [correctGrid, setCorrectGrid] = useState<string[][]>([]);
   const [gridLetters, setGridLetters] = useState<string[][]>([]);
@@ -32,9 +29,11 @@ export default function NormalGamepage() {
 
   // INITIALIZE GAME
   const initializeGame = async () => {
+    if (!todayGrid) return;
+
     try {
-      const generatedCorrectGrid = generateCorrectGrid2D(gameGrid.words);
-      const generatedGrid = generateNormalGrid2D(gameGrid.words);
+      const generatedCorrectGrid = generateCorrectGrid2D(todayGrid.words);
+      const generatedGrid = generateNormalGrid2D(todayGrid.words);
       setCorrectGrid(generatedCorrectGrid);
       setGridLetters(generatedGrid);
       verifyCellStatus(
@@ -54,13 +53,36 @@ export default function NormalGamepage() {
       const maxMoves = Math.ceil(minMoves * MOVE_FACTOR);
       setRemainingMoves(maxMoves);
 
-      if (generatedCorrectGrid && generatedGrid && maxMoves) {
-        setLoading(false);
-      }
+      setLoading((prevLoading) => {
+        if (generatedCorrectGrid && generatedGrid && maxMoves) {
+          return false;
+        }
+        return prevLoading;
+      });
     } catch (error) {
       console.error(error);
     }
   };
+
+  useEffect(() => {
+    // Load json file
+    const normalGridListData = require("../jsons/NormalGridList.json");
+
+    // Get today's grid
+    const today = new Date().toISOString().slice(0, 10);
+    const todayGridData = normalGridListData.find(
+      (grid: any) => grid.date === today
+    );
+    if (todayGridData) {
+      setTodayGrid(todayGridData);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (todayGrid && todayGrid.words.length > 0) {
+      initializeGame();
+    }
+  }, [todayGrid]);
 
   // HANDLE CELL MOVE
   const handleCellMove = (
@@ -85,10 +107,6 @@ export default function NormalGamepage() {
   };
 
   useEffect(() => {
-    initializeGame();
-  }, []);
-
-  useEffect(() => {
     if (!loading) {
       const isSolved = checkIfGridIsSolved(gridLetters, correctGrid);
       setIsGridSolved(isSolved);
@@ -110,14 +128,19 @@ export default function NormalGamepage() {
           indexValue={5}
           nonPlayableCells={[6, 8, 16, 18]}
         />
-        <span className="font-bold">
-          Mouvements restants : {remainingMoves}
+        <span className="font-semiboldbold uppercase text-lg">
+          Mouvements restants :{" "}
+          <span className="text-xl font-bold">{remainingMoves}</span>
         </span>
         {isGridSolved && (
           <span className="font-bold uppercase text-lg theme-text-accent">
             Félicitations !!!
           </span>
         )}
+
+        <CountDown />
+
+        {todayGrid && <WordDefinitions words={todayGrid.words} />}
       </div>
     </DndProvider>
   );
