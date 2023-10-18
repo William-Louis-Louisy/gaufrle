@@ -5,7 +5,7 @@
 * {
   box-sizing: border-box;
   margin: 0;
-  font-family: "Roboto", "Oxygen", sans-serif;
+  font-family: "Titillium Web", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: inherit;
@@ -15,13 +15,85 @@ body {
   height: 100dvh;
 }
 
+h1,
+h2,
+h3 {
+  font-family: "Russo One", sans-serif;
+}
+
+.logo-font {
+  font-family: "Russo One", sans-serif;
+}
+
+.grid-container {
+  display: grid;
+  width: 280px;
+  grid-template-rows: repeat(5, 1fr);
+  grid-template-columns: repeat(5, 1fr);
+}
+
+@keyframes blink {
+  0% {
+    background-color: #35c6ea;
+  }
+  14% {
+    background-color: #9252d7;
+  }
+  28% {
+    background-color: #8689d9;
+  }
+  42% {
+    background-color: #33658a;
+  }
+  56% {
+    background-color: #35c6ea;
+  }
+  70% {
+    background-color: #8689d9;
+  }
+  84% {
+    background-color: #9252d7;
+  }
+  100% {
+    background-color: #f218b8;
+  }
+}
+
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(-25%);
+    animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+  }
+  50% {
+    transform: none;
+    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  }
+}
+
 /** CUSTOM TAILWIND STYLES **/
 .theme-text {
   @apply text-txtLight dark:text-txtDark;
 }
 
+.theme-text-accent {
+  @apply text-accntLight dark:text-accntDark;
+}
+
 .theme-bg {
   @apply bg-bgLight dark:bg-bgDark;
+}
+
+.theme-bg-inverse {
+  @apply bg-bgDark dark:bg-bgLight;
+}
+
+.theme-border {
+  @apply border-2 border-txtLight dark:border-txtDark;
+}
+
+.theme-divider {
+  @apply theme-bg-inverse w-11/12 py-[0.5px];
 }
 
 .theme-lmnt {
@@ -29,5 +101,78 @@ body {
 }
 
 .theme-header {
-  @apply w-full h-16 px-16 flex flex-row justify-between items-center;
+  @apply w-full h-16 px-4 md:px-[10%] flex flex-row justify-between items-center;
+}
+
+.theme-footer {
+  @apply w-full h-10 px-8 flex flex-row justify-center items-center theme-lmnt theme-text text-sm;
+}
+
+.theme-nav-border {
+  @apply border-b-4 border-transparent hover:border-txtLight dark:hover:border-txtDark hover:border-b-4;
+}
+
+.theme-nav-border-accnt {
+  @apply border-b-4 border-accntLight dark:border-accntDark;
+}
+
+.theme-shadow {
+  @apply shadow-xl dark:shadow-lmntDark;
+}
+
+.home-card {
+  @apply theme-lmnt cursor-pointer w-full md:w-1/4 p-4 rounded-md flex flex-col items-center justify-center theme-border relative theme-shadow;
+}
+
+.home-card-title {
+  @apply absolute theme-bg w-full bottom-0 left-0 p-4 font-semibold flex flex-row items-center justify-between rounded-b-md;
+}
+
+.cell {
+  @apply flex justify-center items-center w-10 h-10 md:text-2xl font-bold md:w-14 md:h-14 rounded-md m-1 uppercase;
+}
+
+.disabled-cell {
+  @apply theme-bg cell;
+}
+
+.normal-cell {
+  @apply theme-lmnt cell cursor-pointer;
+}
+
+.correct-cell {
+  @apply bg-valid cell;
+}
+
+.line-or-column-cell {
+  @apply bg-almostValid cell;
+}
+
+.mini-cell {
+  @apply w-4 h-4 rounded-sm m-0.5;
+}
+
+.mini-normal-cell {
+  @apply theme-bg mini-cell border border-txtLight dark:border-txtDark;
+}
+
+.mini-disabled-cell {
+  @apply theme-lmnt mini-cell;
+}
+
+.main-view {
+  @apply min-h-[calc(100vh-64px)] theme-bg theme-text flex flex-col justify-center items-center;
+}
+
+.blink-cell {
+  @apply cell;
+  animation: blink 1s infinite;
+}
+
+.nav-link {
+  @apply font-bold px-3 h-full flex justify-center items-center;
+}
+
+.logo {
+  @apply theme-text-accent text-xl md:text-2xl logo-font;
 }

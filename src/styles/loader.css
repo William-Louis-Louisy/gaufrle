@@ -1,0 +1,38 @@
+@keyframes loading {
+  0% {
+    background-color: #273469;
+  }
+  25% {
+    background-color: #35c6ea;
+  }
+  50% {
+    background-color: #33658a;
+  }
+  75% {
+    background-color: #273469;
+  }
+  100% {
+    background-color: #33658a;
+  }
+}
+
+.waffle {
+  display: grid;
+  grid-gap: 4px;
+  padding: 4px;
+  border-radius: 7px;
+  background-color: #121213;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.square {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  background-color: #273469;
+  animation: loading 3.1s infinite;
+}
+
+/* .square:nth-child(even) {
+  animation-delay: 0.31s;
+} */
