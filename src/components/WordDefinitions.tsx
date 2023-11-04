@@ -26,16 +26,16 @@ function WordDefinitions({ words }: WordDefinitionsProps) {
   }, [words]);
 
   return (
-    <div className="theme-lmnt w-3/5 p-8 rounded-md my-8">
+    <div className="theme-lmnt md:w-4/5 2xl:w-[70%] py-6 px-8 md:px-16 mb-8 md:rounded-md">
       <h3 className="mb-4 uppercase text-lg text-center">
         Définitions des mots
       </h3>
       <ul className="flex flex-col gap-4">
         {definitions.map((def, index) => (
           <li key={index} className="flex flex-col">
-            <span className="font-bold text-lg">{def.word}:</span>
+            <span className="font-bold text-base md:text-lg">{def.word}:</span>
             {def.definition.map((d: string, index: number) => (
-              <p key={index} className="ml-4 italic">
+              <p key={index} className="mx-4 italic text-sm md:text-base">
                 {d}
               </p>
             ))}

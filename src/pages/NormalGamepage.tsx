@@ -1,73 +1,35 @@
-import {
-  generateCorrectGrid2D,
-  generateNormalGrid2D,
-} from "../utils/GridsGeneration";
 import { DndProvider } from "react-dnd";
 import { useEffect, useState } from "react";
 import GameGrid from "../components/GameGrid";
 import { IGridData } from "../types/GameGrid";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import Loading from "../components/Navigation/Loading";
-import { findMinimumMoves } from "../utils/CalculateMoves";
 import { checkIfGridIsSolved, verifyCellStatus } from "../utils/CellStatus";
-import CountDown from "../components/CountDown";
 import WordDefinitions from "../components/WordDefinitions";
-
-const MOVE_FACTOR = 1.25;
+import { initializeNormalGame } from "../utils/InitializeGame";
+import GameOver from "../components/GameOver";
+import SeeSolution from "../components/SeeSolution";
+import Victory from "../components/Victory";
+import GridTitle from "../components/GridTitle";
 
 export default function NormalGamepage() {
   // STATES
   const [loading, setLoading] = useState<boolean>(true);
+  const [previousGrid, setPreviousGrid] = useState<any>();
   const [todayGrid, setTodayGrid] = useState<IGridData>();
+  const [minMoves, setMinMoves] = useState<number>(0);
   const [remainingMoves, setRemainingMoves] = useState<number>(0);
   const [correctGrid, setCorrectGrid] = useState<string[][]>([]);
   const [gridLetters, setGridLetters] = useState<string[][]>([]);
   const [isGridSolved, setIsGridSolved] = useState<boolean>(false);
+  const [isGameIsOver, setIsGameIsOver] = useState<boolean>(true);
   const [cellStatus, setCellStatus] = useState<string[][]>(
     Array.from({ length: 5 }, () => Array(5).fill("default"))
   );
 
-  // INITIALIZE GAME
-  const initializeGame = async () => {
-    if (!todayGrid) return;
-
-    try {
-      const generatedCorrectGrid = generateCorrectGrid2D(todayGrid.words);
-      const generatedGrid = generateNormalGrid2D(todayGrid.words);
-      setCorrectGrid(generatedCorrectGrid);
-      setGridLetters(generatedGrid);
-      verifyCellStatus(
-        generatedGrid,
-        setCellStatus,
-        generatedCorrectGrid,
-        "normal"
-      );
-
-      // Calculate minimum moves
-      const minMoves = findMinimumMoves(
-        generatedCorrectGrid,
-        generatedGrid,
-        5,
-        5
-      );
-      const maxMoves = Math.ceil(minMoves * MOVE_FACTOR);
-      setRemainingMoves(maxMoves);
-
-      setLoading((prevLoading) => {
-        if (generatedCorrectGrid && generatedGrid && maxMoves) {
-          return false;
-        }
-        return prevLoading;
-      });
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   useEffect(() => {
     // Load json file
     const normalGridListData = require("../jsons/NormalGridList.json");
-
     // Get today's grid
     const today = new Date().toISOString().slice(0, 10);
     const todayGridData = normalGridListData.find(
@@ -78,9 +40,33 @@ export default function NormalGamepage() {
     }
   }, []);
 
+  // GET SAVED GRID FROM LOCAL STORAGE IF ANY AND IF DATE IS TODAY
+  useEffect(() => {
+    const savedGrid = localStorage.getItem("currentNormalGrid");
+    if (savedGrid) {
+      const savedGridData = JSON.parse(savedGrid);
+      const savedGridDate = savedGridData.date;
+      const today = new Date().toISOString().slice(0, 10);
+      if (savedGridDate === today) {
+        setPreviousGrid(savedGridData);
+        setLoading(false);
+      }
+    }
+  }, []);
+
   useEffect(() => {
     if (todayGrid && todayGrid.words.length > 0) {
-      initializeGame();
+      initializeNormalGame({
+        todayGrid,
+        setLoading,
+        setRemainingMoves,
+        setCellStatus,
+        setCorrectGrid,
+        setGridLetters,
+        previousGrid,
+        setIsGameIsOver,
+        setMinMoves,
+      });
     }
   }, [todayGrid]);
 
@@ -104,6 +90,21 @@ export default function NormalGamepage() {
 
     // Update remaining moves
     setRemainingMoves((prev) => prev - 1);
+
+    const dateTime = new Date().toISOString().slice(0, 10);
+
+    // Save grid to local storage
+    localStorage.setItem(
+      "currentNormalGrid",
+      JSON.stringify({
+        date: dateTime,
+        gridLetters: newGridLetters,
+        cellStatus: cellStatus,
+        remainingMoves: remainingMoves - 1,
+        isGameIsOver: isGameIsOver,
+        isGridSolved: isGridSolved,
+      })
+    );
   };
 
   useEffect(() => {
@@ -111,7 +112,15 @@ export default function NormalGamepage() {
       const isSolved = checkIfGridIsSolved(gridLetters, correctGrid);
       setIsGridSolved(isSolved);
     }
-  }, [gridLetters, correctGrid]);
+  }, [gridLetters, correctGrid, loading]);
+
+  useEffect(() => {
+    if (isGridSolved) {
+      setIsGameIsOver(false);
+    } else if (remainingMoves === 0) {
+      setIsGameIsOver(true);
+    }
+  }, [remainingMoves, isGridSolved]);
 
   if (loading) {
     return <Loading />;
@@ -119,7 +128,8 @@ export default function NormalGamepage() {
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <div className="main-view gap-6 relative">
+      <div className="gap-4 md:gap-6 relative col-view pt-16 w-full">
+        {todayGrid && <GridTitle gridType={todayGrid.type} />}
         <GameGrid
           letters={gridLetters}
           cellStatus={cellStatus}
@@ -127,20 +137,26 @@ export default function NormalGamepage() {
           isGridSolved={isGridSolved}
           indexValue={5}
           nonPlayableCells={[6, 8, 16, 18]}
+          isGameIsOver={isGameIsOver}
         />
-        <span className="font-semiboldbold uppercase text-lg">
-          Mouvements restants :{" "}
-          <span className="text-xl font-bold">{remainingMoves}</span>
+        <span className="font-semibold uppercase text-lg">
+          Mouvements restants :
+          <span className="text-xl font-bold ml-1">{remainingMoves}</span>
         </span>
+
         {isGridSolved && (
-          <span className="font-bold uppercase text-lg theme-text-accent">
-            Félicitations !!!
-          </span>
+          <Victory minMoves={minMoves} remainingMoves={remainingMoves} />
         )}
 
-        <CountDown />
+        {todayGrid && isGameIsOver && (
+          <>
+            <GameOver /> <SeeSolution correctGrid={correctGrid} />
+          </>
+        )}
 
-        {todayGrid && <WordDefinitions words={todayGrid.words} />}
+        {todayGrid && (isGridSolved || isGameIsOver) && (
+          <WordDefinitions words={todayGrid.words} />
+        )}
       </div>
     </DndProvider>
   );

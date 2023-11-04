@@ -1,4 +1,3 @@
-import { type } from "os";
 import { IGameCell } from "./GameCell";
 
 export interface IGameGrid {
@@ -11,6 +10,6 @@ export interface IGameGrid {
 export interface IGridData {
   id: string;
   date: string;
-  type: string;
+  type: "normal" | "medium" | "hard";
   words: string[];
 }

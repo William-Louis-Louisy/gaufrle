@@ -32,6 +32,10 @@ h3 {
   grid-template-columns: repeat(5, 1fr);
 }
 
+.n-et-b {
+  backdrop-filter: grayscale(100%);
+}
+
 @keyframes blink {
   0% {
     background-color: #35c6ea;
@@ -80,6 +84,14 @@ h3 {
   @apply text-accntLight dark:text-accntDark;
 }
 
+.theme-bg-accent {
+  @apply bg-accntLight dark:bg-accntDark;
+}
+
+.theme-btn {
+  @apply text-txtLight dark:text-txtDark hover:dark:text-txtLight hover:text-txtDark bg-lmntLight dark:bg-lmntDark hover:dark:bg-lmntLight hover:bg-lmntDark duration-300 ease-in-out;
+}
+
 .theme-bg {
   @apply bg-bgLight dark:bg-bgDark;
 }
@@ -101,11 +113,15 @@ h3 {
 }
 
 .theme-header {
-  @apply w-full h-16 px-4 md:px-[10%] flex flex-row justify-between items-center;
+  @apply w-full h-16 px-4 md:px-[10%] flex flex-row justify-between items-center theme-bg;
 }
 
 .theme-footer {
-  @apply w-full h-10 px-8 flex flex-row justify-center items-center theme-lmnt theme-text text-sm;
+  @apply w-full h-12 px-8 flex flex-row justify-center items-center theme-bg theme-text text-sm;
+}
+
+.theme-footer-link {
+  @apply m-2 flex flex-col items-center;
 }
 
 .theme-nav-border {
@@ -148,6 +164,10 @@ h3 {
   @apply bg-almostValid cell;
 }
 
+.solution-cell {
+  @apply flex justify-center items-center w-8 h-8 font-bold rounded-md m-0.5 uppercase;
+}
+
 .mini-cell {
   @apply w-4 h-4 rounded-sm m-0.5;
 }
@@ -161,7 +181,11 @@ h3 {
 }
 
 .main-view {
-  @apply min-h-[calc(100vh-64px)] theme-bg theme-text flex flex-col justify-center items-center;
+  @apply min-h-[calc(100vh-64px)] theme-bg theme-text flex flex-col items-center;
+}
+
+.col-view {
+  @apply flex flex-col items-center;
 }
 
 .blink-cell {
@@ -175,4 +199,8 @@ h3 {
 
 .logo {
   @apply theme-text-accent text-xl md:text-2xl logo-font;
+}
+
+.game-over-layer {
+  @apply absolute h-full w-full n-et-b;
 }
