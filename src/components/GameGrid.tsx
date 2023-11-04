@@ -13,6 +13,7 @@ interface GameGridProps {
   ) => void;
   indexValue: number;
   nonPlayableCells: any;
+  isGameIsOver?: boolean;
 }
 
 function GameGrid({
@@ -22,9 +23,10 @@ function GameGrid({
   isGridSolved,
   nonPlayableCells,
   indexValue,
+  isGameIsOver,
 }: GameGridProps) {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col relative">
       {letters.map((row, i) => {
         return (
           <div className="flex flex-row" key={i}>
@@ -46,6 +48,8 @@ function GameGrid({
           </div>
         );
       })}
+
+      {isGameIsOver && <div className="game-over-layer"></div>}
     </div>
   );
 }

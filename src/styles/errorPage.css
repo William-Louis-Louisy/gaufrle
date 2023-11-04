@@ -1,0 +1,22 @@
+@keyframes moveAndTurn {
+  0%,
+  100% {
+    transform: translateX(0) scaleX(1); /* Position d'origine, face à la droite */
+  }
+  25% {
+    transform: translateX(-100px) scaleX(1); /* Se déplace vers la gauche */
+  }
+  26% {
+    transform: translateX(-100px) scaleX(-1); /* Se retourne rapidement vers la gauche */
+  }
+  75% {
+    transform: translateX(100px) scaleX(-1); /* Continue de se déplacer vers la droite en étant tourné vers la gauche */
+  }
+  76% {
+    transform: translateX(100px) scaleX(1); /* Se retourne rapidement vers la droite */
+  }
+}
+
+.image-to-animate {
+  animation: moveAndTurn 10s infinite ease-in-out; /* 10s est la durée de l'animation. Vous pouvez l'ajuster */
+}

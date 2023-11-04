@@ -1,74 +1,82 @@
-import {
-  generateHardGrid2D,
-  generateCorrectHardGrid2D,
-} from "../utils/HardGridsGeneration";
 import { DndProvider } from "react-dnd";
 import { useState, useEffect } from "react";
+import Victory from "../components/Victory";
 import GameGrid from "../components/GameGrid";
+import { IGridData } from "../types/GameGrid";
+import GameOver from "../components/GameOver";
+import SeeSolution from "../components/SeeSolution";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { findMinimumMoves } from "../utils/CalculateMoves";
-import { checkIfGridIsSolved, verifyCellStatus } from "../utils/CellStatus";
 import Loading from "../components/Navigation/Loading";
-
-const MOVE_FACTOR = 1.25;
-const gameGrid = {
-  id: "6512ba72e1b7caeb9893f815",
-  date: "2023-09-25",
-  type: "hard",
-  words: [
-    "aborder",
-    "lombric",
-    "tisanes",
-    "rosiere",
-    "aplatir",
-    "osmoses",
-    "derange",
-    "racisme",
-  ],
-};
+import WordDefinitions from "../components/WordDefinitions";
+import { initializeHardGame } from "../utils/InitializeGame";
+import { checkIfGridIsSolved, verifyCellStatus } from "../utils/CellStatus";
+import { getMonday, getSunday } from "../utils/WeeklyGrid";
+import GridTitle from "../components/GridTitle";
 
 function HardGamepage() {
   // STATES
   const [loading, setLoading] = useState<boolean>(true);
+  const [previousGrid, setPreviousGrid] = useState<any>();
+  const [todayGrid, setTodayGrid] = useState<IGridData>();
+  const [minMoves, setMinMoves] = useState<number>(0);
   const [remainingMoves, setRemainingMoves] = useState<number>(0);
   const [correctGrid, setCorrectGrid] = useState<string[][]>([]);
   const [gridLetters, setGridLetters] = useState<string[][]>([]);
   const [isGridSolved, setIsGridSolved] = useState<boolean>(false);
+  const [isGameIsOver, setIsGameIsOver] = useState<boolean>(true);
   const [cellStatus, setCellStatus] = useState<string[][]>(
     Array.from({ length: 7 }, () => Array(7).fill("default"))
   );
+  // Get this week's grid
+  const today = new Date().toISOString().slice(0, 10);
+  // Dates du lundi et du dimanche de la semaine actuelle
+  const currentMonday = getMonday(today);
+  const currentSunday = getSunday(today);
+  // GET THIS WEEK'S GRID
+  useEffect(() => {
+    // Load json file
+    const hardGridListData = require("../jsons/HardGridList.json");
 
-  // INITIALIZE GAME
-  const initializeGame = async () => {
-    try {
-      const generatedCorrectGrid = generateCorrectHardGrid2D(gameGrid.words);
-      const generatedGrid = generateHardGrid2D(gameGrid.words);
-      setCorrectGrid(generatedCorrectGrid);
-      setGridLetters(generatedGrid);
-      verifyCellStatus(
-        generatedGrid,
-        setCellStatus,
-        generatedCorrectGrid,
-        "hard"
-      );
+    // Find the grid with the same week number as today
+    const todayGridData = hardGridListData.find((grid: any) => {
+      const gridDate = new Date(grid.date);
 
-      // Calculate minimum moves
-      const minMoves = findMinimumMoves(
-        generatedCorrectGrid,
-        generatedGrid,
-        7,
-        7
-      );
-      const maxMoves = Math.ceil(minMoves * MOVE_FACTOR);
-      setRemainingMoves(maxMoves);
+      return gridDate >= currentMonday && gridDate <= currentSunday;
+    });
+    if (todayGridData) {
+      setTodayGrid(todayGridData);
+    }
+  }, []);
 
-      if (generatedCorrectGrid && generatedGrid && maxMoves) {
+  // GET SAVED GRID FROM LOCAL STORAGE IF ANY AND IF DATE IS IN THE SAME WEEK
+  useEffect(() => {
+    const savedGrid = localStorage.getItem("currentHardGrid");
+    if (savedGrid) {
+      const savedGridData = JSON.parse(savedGrid);
+      const gridDate = new Date(savedGridData.date);
+      if (gridDate >= currentMonday && gridDate <= currentSunday) {
+        setPreviousGrid(savedGridData);
         setLoading(false);
       }
-    } catch (error) {
-      console.error(error);
     }
-  };
+  }, []);
+
+  // INITIALIZE GAME
+  useEffect(() => {
+    if (todayGrid && todayGrid.words.length > 0) {
+      initializeHardGame({
+        todayGrid,
+        setLoading,
+        setRemainingMoves,
+        setCellStatus,
+        setCorrectGrid,
+        setGridLetters,
+        previousGrid,
+        setIsGameIsOver,
+        setMinMoves,
+      });
+    }
+  }, [todayGrid]);
 
   // HANDLE CELL MOVE
   const handleCellMove = (
@@ -90,18 +98,37 @@ function HardGamepage() {
 
     // Update remaining moves
     setRemainingMoves((prev) => prev - 1);
-  };
 
-  useEffect(() => {
-    initializeGame();
-  }, []);
+    const dateTime = new Date().toISOString().slice(0, 10);
+
+    // Save current grid to local storage
+    localStorage.setItem(
+      "currentHardGrid",
+      JSON.stringify({
+        date: dateTime,
+        gridLetters: newGridLetters,
+        cellStatus: cellStatus,
+        remainingMoves: remainingMoves - 1,
+        isGameIsOver: isGameIsOver,
+        isGridSolved: isGridSolved,
+      })
+    );
+  };
 
   useEffect(() => {
     if (!loading) {
       const isSolved = checkIfGridIsSolved(gridLetters, correctGrid);
       setIsGridSolved(isSolved);
     }
-  }, [gridLetters, correctGrid]);
+  }, [gridLetters, correctGrid, loading]);
+
+  useEffect(() => {
+    if (isGridSolved) {
+      setIsGameIsOver(false);
+    } else if (remainingMoves === 0) {
+      setIsGameIsOver(true);
+    }
+  }, [remainingMoves, isGridSolved]);
 
   if (loading) {
     return <Loading />;
@@ -109,7 +136,8 @@ function HardGamepage() {
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <div className="main-view gap-6 relative">
+      <div className="gap-4 md:gap-6 relative col-view pt-16 w-full">
+        {todayGrid && <GridTitle gridType={todayGrid.type} />}
         <GameGrid
           letters={gridLetters}
           cellStatus={cellStatus}
@@ -117,14 +145,29 @@ function HardGamepage() {
           isGridSolved={isGridSolved}
           indexValue={7}
           nonPlayableCells={[8, 10, 12, 22, 24, 26, 36, 38, 40]}
+          isGameIsOver={isGameIsOver}
         />
-        <span className="font-bold">
-          Mouvements restants : {remainingMoves}
+        <span className="font-semibold uppercase text-lg">
+          Mouvements restants :{" "}
+          <span className="text-xl font-bold ml-1">{remainingMoves}</span>
         </span>
+
         {isGridSolved && (
-          <span className="font-bold uppercase text-lg theme-text-accent">
-            Félicitations !!!
-          </span>
+          <Victory
+            minMoves={minMoves}
+            weekly={true}
+            remainingMoves={remainingMoves}
+          />
+        )}
+
+        {todayGrid && isGameIsOver && (
+          <>
+            <GameOver weekly={true} /> <SeeSolution correctGrid={correctGrid} />
+          </>
+        )}
+
+        {todayGrid && (isGridSolved || isGameIsOver) && (
+          <WordDefinitions words={todayGrid.words} />
         )}
       </div>
     </DndProvider>

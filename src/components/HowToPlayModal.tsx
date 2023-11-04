@@ -7,26 +7,31 @@ type HowToPlayModalProps = {
 };
 
 function HowToPlayModal({ modal, setModal }: HowToPlayModalProps) {
+  const handleCloseModal = () => {
+    setModal(false);
+    document.body.style.overflow = "unset";
+  };
+
   React.useEffect(() => {
     if (modal) {
       document.body.style.overflow = "hidden";
-    } else {
+    } else if (!modal) {
       document.body.style.overflow = "unset";
     }
   }, [modal]);
   return (
     <div className="bg-lmntDark bg-opacity-70 h-full w-full absolute top-0 left-0 flex flex-col items-center">
       {/* MODAL CONTENT */}
-      <div className="w-4/5 max-w-2xl theme-bg flex flex-col items-center h-screen overflow-y-auto relative theme-text">
+      <div className="w-full md:w-4/5 max-w-2xl theme-bg flex flex-col items-center h-screen overflow-y-auto relative theme-text">
         {/* CLOSE BUTTON */}
         <div className="flex flex-row items-center justify-between w-full">
           <div className="m-5 h-9 w-9">
             <span> </span>
           </div>
-          <h3 className="uppercase text-2xl theme-text-accent">
+          <h3 className="uppercase text-xl md:text-2xl theme-text-accent">
             Comment jouer ?
           </h3>
-          <button className="m-5" onClick={() => setModal(false)}>
+          <button className="m-5" onClick={() => handleCloseModal()}>
             <IoCloseCircle className="theme-text text-4xl" />
           </button>
         </div>

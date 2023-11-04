@@ -1,6 +1,7 @@
 import React from "react";
 import { FaChevronRight } from "react-icons/fa6";
 import { gridMetadata } from "../utils/CellStatus";
+import { Link } from "react-router-dom";
 
 export interface CtaHomeProps {
   mode: "normal" | "medium" | "hard";
@@ -8,6 +9,7 @@ export interface CtaHomeProps {
   description: string;
   cellsNumber: number;
   colsNumber: string;
+  href: string;
 }
 
 function CtaHome({
@@ -16,9 +18,11 @@ function CtaHome({
   description,
   cellsNumber,
   colsNumber,
+  href,
 }: CtaHomeProps) {
   return (
-    <div
+    <Link
+      to={href}
       className={`home-card ${mode === "normal" ? "md:min-h-full" : ""}`}
       title={description}
     >
@@ -38,7 +42,7 @@ function CtaHome({
         <span className="theme-text-accent">{title}</span>
         <FaChevronRight className="theme-text-accent" />
       </div>
-    </div>
+    </Link>
   );
 }
 
