@@ -66,12 +66,16 @@ function Header({ setModal, isMenuOpen, setIsMenuOpen }: HeaderProps) {
           ))}
         </nav>
         <DarkModeToggle />
-        <button onClick={() => setModal(true)}>
+        <button onClick={() => setModal(true)} title="Comment jouer ?">
           <FaCircleQuestion className="text-2xl mb-1 theme-text" />
         </button>
       </div>
 
-      <button onClick={() => handleMenu()} className="flex md:hidden">
+      <button
+        onClick={() => handleMenu()}
+        className="flex md:hidden"
+        title="Ouvrir le menu"
+      >
         <FaBars className="text-2xl theme-text" />
       </button>
     </div>
