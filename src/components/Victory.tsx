@@ -53,7 +53,7 @@ function Victory({
         <img
           className="max-h-full animate-bounce"
           src="https://ucarecdn.com/5020ce0f-690e-4c79-9e5c-6e40ee9ac4e6/-/preview/500x500/-/quality/smart/-/format/auto/"
-          alt=""
+          alt="Une gaufre joyeuse"
         />
       </div>
       <div className="flex flex-col items-center justify-center">

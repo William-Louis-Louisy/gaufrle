@@ -22,6 +22,7 @@ function Menu({
       current: pathname === "/normal-game",
       imgSrc:
         "https://ucarecdn.com/d3a18e9a-da74-4e57-a6a5-ae1e782706e6/-/preview/500x500/-/quality/smart/-/format/auto/",
+      imgAlt: "Médaille de bronze",
     },
     {
       name: "Gauf' au suc'",
@@ -29,6 +30,7 @@ function Menu({
       current: pathname === "/medium-game",
       imgSrc:
         "https://ucarecdn.com/2d3b5c90-d564-41e9-b5f5-bb200aff634a/-/preview/500x500/-/quality/smart/-/format/auto/",
+      imgAlt: "Médaille d'argent",
     },
     {
       name: "Gaufre salée",
@@ -36,6 +38,7 @@ function Menu({
       current: pathname === "/hard-game",
       imgSrc:
         "https://ucarecdn.com/4615a20f-db47-42e2-87f7-e808567f1b1d/-/preview/500x500/-/quality/smart/-/format/auto/",
+      imgAlt: "Médaille d'or",
     },
   ];
 
@@ -64,7 +67,7 @@ function Menu({
             index === navigation.length - 1 ? "border-b" : ""
           }`}
         >
-          <img src={item.imgSrc} className="w-6 h-6" alt="" />
+          <img src={item.imgSrc} className="w-6 h-6" alt={item.imgAlt} />
           {item.name}
         </a>
       ))}

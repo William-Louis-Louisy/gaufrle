@@ -8,7 +8,7 @@ function GameOver({ weekly = false }: { weekly?: boolean }) {
         <img
           className="max-h-full"
           src="https://ucarecdn.com/aa5775bd-681c-4ddb-894d-4ba2dbea070a/-/preview/500x500/-/quality/smart/-/format/auto/"
-          alt=""
+          alt="Une gaufre triste"
         />
       </div>
       <div className="flex flex-col items-center justify-center">

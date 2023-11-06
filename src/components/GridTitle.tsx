@@ -30,7 +30,6 @@ function GridTitle({ gridType }: { gridType: "normal" | "medium" | "hard" }) {
     }
   };
 
-  console.log("currentMonday", currentMonday.toLocaleDateString("fr-FR"));
   return (
     <div className="flex flex-col md:flex-row items-center md:gap-4 theme-text-accent">
       <span className="font-semibold uppercase text-lg">

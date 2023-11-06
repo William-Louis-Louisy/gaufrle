@@ -8,7 +8,7 @@ function Supportpage() {
         <img
           className="w-40 h-40"
           src="https://ucarecdn.com/2e1ea5d1-7a00-421b-bba9-d5540a55f236/-/preview/500x500/-/quality/smart/-/format/auto/"
-          alt=""
+          alt="Une tasse de café et une gaufre qui vous supplie de lui en offrir un"
         />
 
         {/* Text */}
