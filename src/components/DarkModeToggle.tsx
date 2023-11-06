@@ -6,7 +6,11 @@ function DarkModeToggle() {
   const { isDarkMode, toggleDarkMode } = useDarkMode();
 
   return (
-    <button onClick={toggleDarkMode} className="p-1.5 mb-1 rounded-full">
+    <button
+      onClick={toggleDarkMode}
+      className="p-1.5 mb-1 rounded-full"
+      title="Changez le thème de l'application"
+    >
       {isDarkMode ? (
         <HiMoon className="text-moon text-xl" />
       ) : (

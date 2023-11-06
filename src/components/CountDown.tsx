@@ -41,7 +41,7 @@ function CountDown({ weekly = false }: { weekly?: boolean }) {
   return (
     <div className="flex flex-col">
       <div className="italic text-sm md:text-base">Prochaine gaufre dans :</div>
-      <span className="not-italic font-semibold text-lg md:text-xl">
+      <span className="not-italic font-semibold md:text-xl">
         {hours}h {minutes}m {seconds}s
       </span>
     </div>
