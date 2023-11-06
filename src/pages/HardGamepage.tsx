@@ -4,14 +4,15 @@ import Victory from "../components/Victory";
 import GameGrid from "../components/GameGrid";
 import { IGridData } from "../types/GameGrid";
 import GameOver from "../components/GameOver";
+import GridTitle from "../components/GridTitle";
 import SeeSolution from "../components/SeeSolution";
-import { HTML5Backend } from "react-dnd-html5-backend";
 import Loading from "../components/Navigation/Loading";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import { getMonday, getSunday } from "../utils/WeeklyGrid";
 import WordDefinitions from "../components/WordDefinitions";
 import { initializeHardGame } from "../utils/InitializeGame";
 import { checkIfGridIsSolved, verifyCellStatus } from "../utils/CellStatus";
-import { getMonday, getSunday } from "../utils/WeeklyGrid";
-import GridTitle from "../components/GridTitle";
+import { TouchBackend } from "react-dnd-touch-backend";
 
 function HardGamepage() {
   // STATES
@@ -27,6 +28,14 @@ function HardGamepage() {
   const [cellStatus, setCellStatus] = useState<string[][]>(
     Array.from({ length: 7 }, () => Array(7).fill("default"))
   );
+
+  function isTouchDevice() {
+    if ("ontouchstart" in window || navigator.maxTouchPoints) {
+      return true;
+    }
+    return false;
+  }
+
   // Get this week's grid
   const today = new Date().toISOString().slice(0, 10);
   // Dates du lundi et du dimanche de la semaine actuelle
@@ -135,7 +144,10 @@ function HardGamepage() {
   }
 
   return (
-    <DndProvider backend={HTML5Backend}>
+    <DndProvider
+      backend={isTouchDevice() ? TouchBackend : HTML5Backend}
+      options={{ enableTouchEvents: true }}
+    >
       <div className="gap-4 md:gap-6 relative col-view pt-16 w-full">
         {todayGrid && <GridTitle gridType={todayGrid.type} />}
         <GameGrid

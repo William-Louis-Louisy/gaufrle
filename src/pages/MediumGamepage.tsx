@@ -4,13 +4,14 @@ import Victory from "../components/Victory";
 import GameGrid from "../components/GameGrid";
 import { IGridData } from "../types/GameGrid";
 import GameOver from "../components/GameOver";
+import GridTitle from "../components/GridTitle";
 import SeeSolution from "../components/SeeSolution";
 import Loading from "../components/Navigation/Loading";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import WordDefinitions from "../components/WordDefinitions";
 import { initializeMediumGame } from "../utils/InitializeGame";
 import { checkIfGridIsSolved, verifyCellStatus } from "../utils/CellStatus";
-import GridTitle from "../components/GridTitle";
+import { TouchBackend } from "react-dnd-touch-backend";
 
 function MediumGamepage() {
   // STATES
@@ -26,6 +27,13 @@ function MediumGamepage() {
   const [cellStatus, setCellStatus] = useState<string[][]>(
     Array.from({ length: 7 }, () => Array(7).fill("default"))
   );
+
+  function isTouchDevice() {
+    if ("ontouchstart" in window || navigator.maxTouchPoints) {
+      return true;
+    }
+    return false;
+  }
 
   // GET TODAY'S GRID
   useEffect(() => {
@@ -129,7 +137,10 @@ function MediumGamepage() {
   }
 
   return (
-    <DndProvider backend={HTML5Backend}>
+    <DndProvider
+      backend={isTouchDevice() ? TouchBackend : HTML5Backend}
+      options={{ enableTouchEvents: true }}
+    >
       <div className="gap-4 md:gap-6 relative col-view pt-16 w-full">
         {todayGrid && <GridTitle gridType={todayGrid.type} />}
         <GameGrid

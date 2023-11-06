@@ -1,16 +1,17 @@
 import { DndProvider } from "react-dnd";
 import { useEffect, useState } from "react";
+import Victory from "../components/Victory";
 import GameGrid from "../components/GameGrid";
 import { IGridData } from "../types/GameGrid";
+import GameOver from "../components/GameOver";
+import GridTitle from "../components/GridTitle";
+import SeeSolution from "../components/SeeSolution";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import { TouchBackend } from "react-dnd-touch-backend";
 import Loading from "../components/Navigation/Loading";
-import { checkIfGridIsSolved, verifyCellStatus } from "../utils/CellStatus";
 import WordDefinitions from "../components/WordDefinitions";
 import { initializeNormalGame } from "../utils/InitializeGame";
-import GameOver from "../components/GameOver";
-import SeeSolution from "../components/SeeSolution";
-import Victory from "../components/Victory";
-import GridTitle from "../components/GridTitle";
+import { checkIfGridIsSolved, verifyCellStatus } from "../utils/CellStatus";
 
 export default function NormalGamepage() {
   // STATES
@@ -26,6 +27,13 @@ export default function NormalGamepage() {
   const [cellStatus, setCellStatus] = useState<string[][]>(
     Array.from({ length: 5 }, () => Array(5).fill("default"))
   );
+
+  function isTouchDevice() {
+    if ("ontouchstart" in window || navigator.maxTouchPoints) {
+      return true;
+    }
+    return false;
+  }
 
   useEffect(() => {
     // Load json file
@@ -127,7 +135,10 @@ export default function NormalGamepage() {
   }
 
   return (
-    <DndProvider backend={HTML5Backend}>
+    <DndProvider
+      backend={isTouchDevice() ? TouchBackend : HTML5Backend}
+      options={{ enableTouchEvents: true }}
+    >
       <div className="gap-4 md:gap-6 relative col-view pt-16 w-full">
         {todayGrid && <GridTitle gridType={todayGrid.type} />}
         <GameGrid
