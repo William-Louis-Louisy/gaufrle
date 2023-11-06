@@ -38,7 +38,7 @@ h3 {
 
 @keyframes blink {
   0% {
-    background-color: #35c6ea;
+    background-color: #cc35ea;
   }
   14% {
     background-color: #9252d7;
@@ -181,7 +181,7 @@ h3 {
 }
 
 .main-view {
-  @apply min-h-[calc(100vh-64px)] theme-bg theme-text flex flex-col items-center;
+  @apply min-h-[calc(100vh-112px)] theme-bg theme-text flex flex-col items-center;
 }
 
 .col-view {
@@ -190,7 +190,7 @@ h3 {
 
 .blink-cell {
   @apply cell;
-  animation: blink 1s infinite;
+  animation: blink 1.5s infinite;
 }
 
 .nav-link {

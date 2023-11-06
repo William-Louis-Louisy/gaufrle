@@ -3,7 +3,7 @@ import CtaHome from "../components/CtaHome";
 
 function Homepage() {
   return (
-    <div className="md:w-4/5 flex flex-col items-center px-4 md:px-0 gap-8 min-h-[calc(100dvh-64px)]">
+    <div className="md:w-4/5 flex flex-col items-center px-4 md:px-0 gap-8 min-h-[calc(100dvh-112px)]">
       <div className="flex flex-col items-center relative h-44 w-full mt-1">
         <img
           className="object-cover w-full h-full blur-[2px]"
