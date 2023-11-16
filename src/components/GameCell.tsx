@@ -20,7 +20,7 @@ function GameCell({
   const [, ref] = useDrop({
     accept: ItemType,
     drop: (item: { row: number; col: number }) => {
-      if (!isNonPlayable) {
+      if (!isNonPlayable && status !== "correct") {
         onMove(item.row, item.col, row, col);
       }
     },
@@ -29,7 +29,7 @@ function GameCell({
   const [{ isDragging }, drag] = useDrag({
     type: ItemType,
     item: { row, col },
-    canDrag: !isNonPlayable,
+    canDrag: !isNonPlayable && status !== "correct",
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
@@ -54,7 +54,7 @@ function GameCell({
       ref={isNonPlayable ? undefined : (node) => drag(ref(node))}
       style={{
         opacity: isDragging ? 0.5 : 1,
-        animationDelay: isGridSolved ? `${index * 0.05}s` : "0s", // Ajouter un délai basé sur l'index
+        animationDelay: isGridSolved ? `${index * 0.05}s` : "0s",
       }}
     >
       {letter}

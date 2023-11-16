@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Header from "./Header";
 import Footer from "./Footer";
 import HowToPlayModal from "../HowToPlayModal";
@@ -9,8 +9,24 @@ interface LayoutProps {
 }
 
 export default function Layout({ children }: LayoutProps) {
-  const [modal, setModal] = React.useState<boolean>(false);
-  const [isMenuOpen, setIsMenuOpen] = React.useState<boolean>(false);
+  const [modal, setModal] = useState<boolean>(false);
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+  const [isFirstVisit, setIsFirstVisit] = useState<boolean>(false);
+
+  useEffect(() => {
+    const hasVisited = localStorage.getItem("hasVisited");
+    if (!hasVisited) {
+      setIsFirstVisit(true);
+      localStorage.setItem("hasVisited", "true");
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isFirstVisit) {
+      setModal(true);
+    }
+  }, [isFirstVisit]);
+
   return (
     <div className="relative">
       {/* Header */}
