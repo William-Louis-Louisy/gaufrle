@@ -133,7 +133,7 @@ h3 {
 }
 
 .theme-shadow {
-  @apply shadow-xl dark:shadow-lmntDark;
+  @apply shadow-lg dark:shadow-lmntDark;
 }
 
 .home-card {

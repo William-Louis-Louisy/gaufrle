@@ -11,7 +11,9 @@ import {
   generateMediumGrid2D,
 } from "./MediumGridsGeneration";
 
-const MOVE_FACTOR = 1.25;
+const EASY_MOVE_FACTOR = 1.33;
+const MEDIUM_MOVE_FACTOR = 1.5;
+const HARD_MOVE_FACTOR = 1.75;
 
 type InitializeGameProps = {
   todayGrid: IGridData;
@@ -72,7 +74,7 @@ export const initializeNormalGame = async ({
         5,
         5
       );
-      const maxMoves = Math.ceil(minMoves * MOVE_FACTOR);
+      const maxMoves = Math.ceil(minMoves * EASY_MOVE_FACTOR);
       setMinMoves(minMoves);
       setRemainingMoves(maxMoves);
 
@@ -138,7 +140,7 @@ export const initializeMediumGame = async ({
         7,
         7
       );
-      const maxMoves = Math.ceil(minMoves * MOVE_FACTOR);
+      const maxMoves = Math.ceil(minMoves * MEDIUM_MOVE_FACTOR);
       setMinMoves(minMoves);
       setRemainingMoves(maxMoves);
 
@@ -204,7 +206,7 @@ export const initializeHardGame = async ({
         7,
         7
       );
-      const maxMoves = Math.ceil(minMoves * MOVE_FACTOR);
+      const maxMoves = Math.ceil(minMoves * HARD_MOVE_FACTOR);
       setMinMoves(minMoves);
       setRemainingMoves(maxMoves);
 

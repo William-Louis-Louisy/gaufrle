@@ -1,5 +1,6 @@
 import { CTA } from "../utils/CTA";
 import CtaHome from "../components/CtaHome";
+import PatchNotePanel from "../components/PatchNotePanel";
 
 function Homepage() {
   return (
@@ -26,7 +27,7 @@ function Homepage() {
       </h3>
 
       {/* CALL TO ACTIONS */}
-      <div className="flex flex-col md:flex-row md:justify-center gap-8 w-full mb-8">
+      <div className="flex flex-col md:flex-row md:justify-center gap-8 w-full">
         {CTA.map((cta) => (
           <CtaHome
             key={cta.title}
@@ -39,6 +40,9 @@ function Homepage() {
           />
         ))}
       </div>
+
+      {/* Patch Note Panel */}
+      <PatchNotePanel />
     </div>
   );
 }
