@@ -1,5 +1,6 @@
 import { IGridData } from "../types/GameGrid";
 import { GameMode } from "./GameSession";
+import { getPublicationDate, getPublicationMidnight } from "./PublicationClock";
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -59,10 +60,8 @@ function parseUtcDate(value: string): number {
   return timestamp;
 }
 
-export function getUtcDate(now: Date): string {
-  if (!Number.isFinite(now.getTime())) throw new Error("Invalid clock date");
-  return now.toISOString().slice(0, 10);
-}
+// Calendar-only computations use UTC arithmetic to avoid any local DST drift.
+// Publication instants are resolved separately by PublicationClock.
 
 export function getUtcMonday(date: string): string {
   const timestamp = parseUtcDate(date);
@@ -144,18 +143,22 @@ export function selectScheduledGrid(
   return { periodStart, grid };
 }
 
-export function getNextGridChangeUtc(now: Date, weekly: boolean): Date {
-  const todayUtc = getUtcDate(now);
+/**
+ * Real instant of the next publication: 00:00 Europe/Paris (Monday if weekly).
+ * ISO calendar arithmetic deliberately stays independent of device timezone.
+ */
+export function getNextGridChange(now: Date, weekly: boolean): Date {
+  const publicationDate = getPublicationDate(now);
   const nextDate = weekly
-    ? addUtcDays(getUtcMonday(todayUtc), 7)
-    : addUtcDays(todayUtc, 1);
+    ? addUtcDays(getUtcMonday(publicationDate), 7)
+    : addUtcDays(publicationDate, 1);
 
-  return new Date(parseUtcDate(nextDate));
+  return getPublicationMidnight(nextDate);
 }
 
 export function getSecondsUntilNextGrid(now: Date, weekly: boolean): number {
   return Math.max(
     0,
-    Math.ceil((getNextGridChangeUtc(now, weekly).getTime() - now.getTime()) / 1000)
+    Math.ceil((getNextGridChange(now, weekly).getTime() - now.getTime()) / 1000)
   );
 }

@@ -1,14 +1,14 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-import { useCurrentUtcDate } from "../hooks/useCurrentUtcDate";
+import { usePublicationDate } from "../hooks/usePublicationDate";
 import GridUnavailable from "../components/GridUnavailable";
 import GridTitle from "../components/GridTitle";
 
 function DateProbe() {
-  return <span data-testid="utc-date">{useCurrentUtcDate()}</span>;
+  return <span data-testid="publication-date">{usePublicationDate()}</span>;
 }
 
-describe("live UTC publication day", () => {
+describe("live Europe/Paris publication day", () => {
   beforeEach(() => {
     jest.useFakeTimers();
   });
@@ -17,27 +17,38 @@ describe("live UTC publication day", () => {
     jest.useRealTimers();
   });
 
-  test("refreshes the date automatically at UTC midnight without reloading", () => {
-    jest.setSystemTime(new Date("2027-09-05T23:59:59.000Z"));
+  test("refreshes the date automatically at Paris midnight without reloading", () => {
+    jest.setSystemTime(new Date("2027-09-05T21:59:59.000Z"));
     render(<DateProbe />);
 
-    expect(screen.getByTestId("utc-date").textContent).toBe("2027-09-05");
+    expect(screen.getByTestId("publication-date").textContent).toBe("2027-09-05");
     act(() => {
       jest.advanceTimersByTime(1100);
     });
-    expect(screen.getByTestId("utc-date").textContent).toBe("2027-09-06");
+    expect(screen.getByTestId("publication-date").textContent).toBe("2027-09-06");
+  });
+
+  test("refreshes at winter midnight 23:00 UTC, not midnight UTC", () => {
+    jest.setSystemTime(new Date("2026-11-09T22:59:59.000Z"));
+    render(<DateProbe />);
+
+    expect(screen.getByTestId("publication-date").textContent).toBe("2026-11-09");
+    act(() => {
+      jest.advanceTimersByTime(1100);
+    });
+    expect(screen.getByTestId("publication-date").textContent).toBe("2026-11-10");
   });
 
   test("refreshes after the page regains focus from a suspended tab", () => {
     jest.setSystemTime(new Date("2027-09-05T15:00:00.000Z"));
     render(<DateProbe />);
-    expect(screen.getByTestId("utc-date").textContent).toBe("2027-09-05");
+    expect(screen.getByTestId("publication-date").textContent).toBe("2027-09-05");
 
     act(() => {
       jest.setSystemTime(new Date("2027-09-06T10:00:00.000Z"));
       fireEvent.focus(window);
     });
-    expect(screen.getByTestId("utc-date").textContent).toBe("2027-09-06");
+    expect(screen.getByTestId("publication-date").textContent).toBe("2027-09-06");
   });
 });
 

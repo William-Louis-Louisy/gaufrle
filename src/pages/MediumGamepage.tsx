@@ -10,18 +10,18 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { TouchBackend } from "react-dnd-touch-backend";
 import WordDefinitions from "../components/WordDefinitions";
 import { useGameSession } from "../hooks/useGameSession";
-import { useCurrentUtcDate } from "../hooks/useCurrentUtcDate";
+import { usePublicationDate } from "../hooks/usePublicationDate";
 import { selectScheduledGrid } from "../utils/GridSchedule";
 import GridUnavailable from "../components/GridUnavailable";
 import { gridMetadata } from "../utils/CellStatus";
 
 function MediumGamepage() {
-  const todayUtc = useCurrentUtcDate();
+  const publicationDate = usePublicationDate();
   const grids: IGridData[] = require("../jsons/MediumGridList.json");
   const { grid: todayGrid, periodStart } = selectScheduledGrid(
     "medium",
     grids,
-    todayUtc
+    publicationDate
   );
 
   function isTouchDevice() {

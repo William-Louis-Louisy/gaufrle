@@ -5,7 +5,7 @@ import {
   HARD_CYCLE_LENGTH,
   HARD_FIRST_WEEK,
   addUtcDays,
-  getNextGridChangeUtc,
+  getNextGridChange,
   getSecondsUntilNextGrid,
   getUtcMonday,
   selectScheduledGrid,
@@ -86,7 +86,7 @@ describe("the 130-week difficult puzzle cycle", () => {
   });
 });
 
-describe("UTC publication dates", () => {
+describe("Europe/Paris publication dates", () => {
   test("handles daylight saving changes without skipping or doubling weeks", () => {
     expect(getUtcMonday("2026-03-29")).toBe("2026-03-23");
     expect(getUtcMonday("2026-03-30")).toBe("2026-03-30");
@@ -96,21 +96,28 @@ describe("UTC publication dates", () => {
     expect(getUtcMonday("2027-01-04")).toBe("2027-01-04");
   });
 
-  test("rolls over on Monday 00:00 UTC and never gives a negative countdown", () => {
-    const sunday = new Date("2027-09-05T23:59:59.000Z");
-    const monday = new Date("2027-09-06T00:00:00.000Z");
+  test("rolls over on Monday at midnight Europe/Paris in summer", () => {
+    const sunday = new Date("2027-09-05T21:59:59.000Z");
+    const monday = new Date("2027-09-05T22:00:00.000Z");
 
-    expect(getNextGridChangeUtc(sunday, true).toISOString())
-      .toBe("2027-09-06T00:00:00.000Z");
+    expect(getNextGridChange(sunday, true).toISOString())
+      .toBe("2027-09-05T22:00:00.000Z");
     expect(getSecondsUntilNextGrid(sunday, true)).toBe(1);
     expect(getSecondsUntilNextGrid(monday, true)).toBe(7 * 24 * 3600);
     expect(getSecondsUntilNextGrid(monday, false)).toBe(24 * 3600);
   });
 
-  test("recognizes the next UTC day for daily publication", () => {
-    const before = new Date("2026-11-09T23:59:59.000Z");
-    expect(getNextGridChangeUtc(before, false).toISOString())
-      .toBe("2026-11-10T00:00:00.000Z");
+  test("recognizes the next day at midnight Europe/Paris in winter", () => {
+    const before = new Date("2026-11-09T22:59:59.000Z");
+    expect(getNextGridChange(before, false).toISOString())
+      .toBe("2026-11-09T23:00:00.000Z");
+    expect(getSecondsUntilNextGrid(before, false)).toBe(1);
+  });
+
+  test("recognizes the next day at midnight Europe/Paris in summer", () => {
+    const before = new Date("2026-07-09T21:59:59.000Z");
+    expect(getNextGridChange(before, false).toISOString())
+      .toBe("2026-07-09T22:00:00.000Z");
     expect(getSecondsUntilNextGrid(before, false)).toBe(1);
   });
 });
