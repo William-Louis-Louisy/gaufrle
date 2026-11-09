@@ -19,4 +19,6 @@ export interface IGameCell {
     destCol: number
   ) => boolean;
   indexValue: number;
+  isSelected?: boolean;
+  onSelect?: (row: number, col: number) => void;
 }
