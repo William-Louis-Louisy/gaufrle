@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import Victory from "./Victory";
 import type { VictoryScore } from "../utils/Scoring";
 
-jest.mock("./CountDown", () => () => null);
+vi.mock("./CountDown", () => ({ default: () => null }));
 
 const score = (stars: 1 | 2 | 3, movesUsed: number, moveLimit = 20): VictoryScore => ({
   stars,
