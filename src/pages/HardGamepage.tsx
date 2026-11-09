@@ -18,7 +18,7 @@ import { gridMetadata } from "../utils/CellStatus";
 
 function HardGamepage() {
   const publicationDate = usePublicationDate();
-  const grids: IGridData[] = hardCatalog;
+  const grids: IGridData[] = hardCatalog as IGridData[];
   const { grid: todayGrid, periodStart } = selectScheduledGrid(
     "hard",
     grids,
