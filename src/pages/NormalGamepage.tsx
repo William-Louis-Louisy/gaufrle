@@ -18,7 +18,7 @@ import { gridMetadata } from "../utils/CellStatus";
 
 export default function NormalGamepage() {
   const publicationDate = usePublicationDate();
-  const grids: IGridData[] = normalCatalog;
+  const grids: IGridData[] = normalCatalog as IGridData[];
   const { grid: todayGrid, periodStart } = selectScheduledGrid(
     "normal",
     grids,
