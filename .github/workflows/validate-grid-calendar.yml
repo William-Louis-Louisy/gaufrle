@@ -8,6 +8,9 @@ on:
       - 'scripts/reindex-grid-dates.cjs'
       - 'scripts/validate-grid-calendar.cjs'
       - 'scripts/grid-calendar.test.cjs'
+      - 'scripts/*hard-grid-candidates*.cjs'
+      - 'data/hard-grid-candidates.json'
+      - 'src/jsons/DefSevenLetters.json'
       - 'package.json'
       - 'package-lock.json'
       - 'src/pages/*Gamepage.tsx'
@@ -36,6 +39,9 @@ on:
       - 'scripts/reindex-grid-dates.cjs'
       - 'scripts/validate-grid-calendar.cjs'
       - 'scripts/grid-calendar.test.cjs'
+      - 'scripts/*hard-grid-candidates*.cjs'
+      - 'data/hard-grid-candidates.json'
+      - 'src/jsons/DefSevenLetters.json'
       - 'package.json'
       - 'package-lock.json'
       - 'src/pages/*Gamepage.tsx'
@@ -69,6 +75,10 @@ jobs:
         run: npm run test:calendar
       - name: Verify every puzzle date
         run: npm run validate:grids
+      - name: Validate new hard-grid candidates
+        run: npm run validate:hard-candidates
+      - name: Test reproducible generator and puzzle constraints
+        run: npm run test:hard-candidates
 
   session:
     runs-on: ubuntu-latest

@@ -28,7 +28,11 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "validate:grids": "node scripts/validate-grid-calendar.cjs",
-    "test:calendar": "node --test scripts/grid-calendar.test.cjs"
+    "test:calendar": "node --test scripts/grid-calendar.test.cjs",
+    "generate:hard-candidates": "node scripts/generate-hard-grid-candidates.cjs",
+    "validate:hard-candidates": "node scripts/validate-hard-grid-candidates.cjs",
+    "test:hard-candidates": "node --test scripts/hard-grid-candidates.test.cjs",
+    "review:hard-candidates": "node scripts/review-hard-grid-candidates.cjs"
   },
   "eslintConfig": {
     "extends": [
