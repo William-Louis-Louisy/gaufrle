@@ -204,3 +204,24 @@ h3 {
 .game-over-layer {
   @apply absolute h-full w-full n-et-b;
 }
+
+/* Accessible interaction without changing the existing palette. */
+:where(a, button, [tabindex]):focus-visible {
+  outline: 3px solid #2563eb;
+  outline-offset: 3px;
+}
+
+.dark :where(a, button, [tabindex]):focus-visible {
+  outline-color: #facc15;
+}
+
+[aria-pressed="true"].cell {
+  outline: 3px dashed currentColor;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .blink-cell, .animate-bounce {
+    animation: none !important;
+  }
+}
