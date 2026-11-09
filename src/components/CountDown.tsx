@@ -32,7 +32,7 @@ function CountDown({ weekly = false }: { weekly?: boolean }) {
 
     // N'oubliez pas de nettoyer l'intervalle lorsque le composant est démonté
     return () => clearInterval(intervalId);
-  }, []);
+  }, [weekly]);
 
   const hours = Math.floor(timeUntilNextGrid / 3600);
   const minutes = Math.floor((timeUntilNextGrid % 3600) / 60);
