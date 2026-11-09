@@ -1,6 +1,23 @@
 export const UPDATES = [
   {
     releaseDate: "09-11-2026",
+    version: "1.2.0",
+    title: "Gaufrle modernisé",
+    features: [
+      {
+        title: "Une application plus réactive",
+        description:
+          "L'application repose désormais sur un outil de construction modernisé, tout en conservant les mêmes grilles et les mêmes règles de jeu.",
+      },
+      {
+        title: "Navigation et chargement préservés",
+        description:
+          "Les modes de difficulté et les définitions continuent à se charger à la demande.",
+      },
+    ],
+  },
+  {
+    releaseDate: "09-11-2026",
     version: "1.1.1",
     title: "Un jeu plus rapide à charger",
     features: [
