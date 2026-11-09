@@ -15,6 +15,8 @@ on:
       - 'src/utils/GameSession*'
       - 'src/utils/LegacySaveCompatibility.ts'
       - 'src/utils/CellStatus.ts'
+      - 'src/components/CountDown.tsx'
+      - 'src/components/Victory.tsx'
       - '.github/workflows/validate-grid-calendar.yml'
   push:
     branches: [main]
@@ -31,6 +33,8 @@ on:
       - 'src/utils/GameSession*'
       - 'src/utils/LegacySaveCompatibility.ts'
       - 'src/utils/CellStatus.ts'
+      - 'src/components/CountDown.tsx'
+      - 'src/components/Victory.tsx'
       - '.github/workflows/validate-grid-calendar.yml'
 
 jobs:
