@@ -14,9 +14,9 @@ import {
   selectScheduledGrid,
 } from "./GridSchedule";
 
-const hardGrids: IGridData[] = hardCatalog;
-const normalGrids: IGridData[] = normalCatalog;
-const mediumGrids: IGridData[] = mediumCatalog;
+const hardGrids: IGridData[] = hardCatalog as IGridData[];
+const normalGrids: IGridData[] = normalCatalog as IGridData[];
+const mediumGrids: IGridData[] = mediumCatalog as IGridData[];
 
 describe("the 130-week difficult puzzle cycle", () => {
   test("keeps all 130 scheduled entries without silently claiming 130 unique puzzles", () => {
