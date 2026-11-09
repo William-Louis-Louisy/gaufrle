@@ -1,6 +1,23 @@
 export const UPDATES = [
   {
     releaseDate: "09-11-2026",
+    version: "1.1.1",
+    title: "Un jeu plus rapide à charger",
+    features: [
+      {
+        title: "Accueil allégé",
+        description:
+          "Les grilles des différents niveaux sont chargées uniquement lorsque vous ouvrez une partie.",
+      },
+      {
+        title: "Définitions à la demande",
+        description:
+          "Les définitions des mots sont désormais téléchargées uniquement à la fin d'une partie, lorsqu'elles sont utiles.",
+      },
+    ],
+  },
+  {
+    releaseDate: "09-11-2026",
     version: "1.1.0",
     title: "Un jeu plus accessible",
     features: [
