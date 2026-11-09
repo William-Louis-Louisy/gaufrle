@@ -1,3 +1,4 @@
+import normalCatalog from "../jsons/NormalGridList.json";
 import { DndProvider } from "react-dnd";
 import Victory from "../components/Victory";
 import GameGrid from "../components/GameGrid";
@@ -17,7 +18,7 @@ import { gridMetadata } from "../utils/CellStatus";
 
 export default function NormalGamepage() {
   const publicationDate = usePublicationDate();
-  const grids: IGridData[] = require("../jsons/NormalGridList.json");
+  const grids: IGridData[] = normalCatalog;
   const { grid: todayGrid, periodStart } = selectScheduledGrid(
     "normal",
     grids,
