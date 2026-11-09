@@ -44,3 +44,14 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
+## Continuous integration
+
+The [Validate grids and game sessions](.github/workflows/validate-grid-calendar.yml) workflow runs on **every pull request**, on pushes to `main`, and manually via **Actions → Validate grids and game sessions → Run workflow**.
+
+- `validate`: UTC calendar tests (`npm run test:calendar`) and puzzle catalog validation (`npm run validate:grids`).
+- `session`: `npm ci`, TypeScript (`npx tsc --noEmit`), Jest (`CI=true npm test -- --watch=false --runInBand`), and production build (`CI=true npm run build`).
+
+Both jobs must succeed before merging. To **enforce** this in GitHub, configure branch protection / repository rules for `main`: require a pull request and require the status checks **`validate`** and **`session`** to pass. GitHub Actions alone reports results but does not prevent merging if no rule is enabled. Rules are administered in GitHub repository settings and are not changed by this PR.
+
+Locally, run `npm ci` followed by the commands above to reproduce the checks.
