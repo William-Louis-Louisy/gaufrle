@@ -9,9 +9,9 @@ import {
 import { getNextGridChange, getSecondsUntilNextGrid, selectScheduledGrid } from "./GridSchedule";
 import { IGridData } from "../types/GameGrid";
 
-const hardGrids: IGridData[] = hardCatalog;
-const normalGrids: IGridData[] = normalCatalog;
-const mediumGrids: IGridData[] = mediumCatalog;
+const hardGrids: IGridData[] = hardCatalog as IGridData[];
+const normalGrids: IGridData[] = normalCatalog as IGridData[];
+const mediumGrids: IGridData[] = mediumCatalog as IGridData[];
 
 describe("publication clock is always Europe/Paris", () => {
   test("explicitly uses the IANA time zone, not the visitor's locale", () => {
