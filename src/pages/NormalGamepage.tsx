@@ -1,5 +1,4 @@
 import { DndProvider } from "react-dnd";
-import { useEffect, useState } from "react";
 import Victory from "../components/Victory";
 import GameGrid from "../components/GameGrid";
 import { IGridData } from "../types/GameGrid";
@@ -11,19 +10,22 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { TouchBackend } from "react-dnd-touch-backend";
 import WordDefinitions from "../components/WordDefinitions";
 import { useGameSession } from "../hooks/useGameSession";
+import { useCurrentUtcDate } from "../hooks/useCurrentUtcDate";
+import { selectScheduledGrid } from "../utils/GridSchedule";
+import GridUnavailable from "../components/GridUnavailable";
 
 export default function NormalGamepage() {
-  const [todayGrid, setTodayGrid] = useState<IGridData>();
+  const todayUtc = useCurrentUtcDate();
+  const grids: IGridData[] = require("../jsons/NormalGridList.json");
+  const { grid: todayGrid, periodStart } = selectScheduledGrid(
+    "normal",
+    grids,
+    todayUtc
+  );
 
   function isTouchDevice() {
     return "ontouchstart" in window || navigator.maxTouchPoints > 0;
   }
-
-  useEffect(() => {
-    const grids: IGridData[] = require("../jsons/NormalGridList.json");
-    const today = new Date().toISOString().slice(0, 10);
-    setTodayGrid(grids.find((grid) => grid.date === today));
-  }, []);
 
   const {
     isReady,
@@ -35,8 +37,9 @@ export default function NormalGamepage() {
     isGridSolved,
     isGameIsOver,
     handleCellMove,
-  } = useGameSession("normal", todayGrid);
+  } = useGameSession("normal", todayGrid, periodStart);
 
+  if (!todayGrid) return <GridUnavailable />;
   if (!isReady) return <Loading />;
 
   return (
@@ -45,7 +48,7 @@ export default function NormalGamepage() {
       options={{ enableTouchEvents: true }}
     >
       <div className="gap-4 md:gap-6 relative col-view pt-16 w-full">
-        {todayGrid && <GridTitle gridType={todayGrid.type} />}
+        {todayGrid && <GridTitle gridType="normal" periodStart={periodStart} />}
         <GameGrid
           letters={gridLetters}
           cellStatus={cellStatus}

@@ -1,37 +1,20 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { getSecondsUntilNextGrid } from "../utils/GridSchedule";
 
 function CountDown({ weekly = false }: { weekly?: boolean }) {
-  const [timeUntilNextGrid, setTimeUntilNextGrid] = useState<number>(0);
+  const [timeUntilNextGrid, setTimeUntilNextGrid] = useState(() =>
+    getSecondsUntilNextGrid(new Date(), weekly)
+  );
 
   useEffect(() => {
-    // Obtenez la date et l'heure actuelles
-    const now = new Date();
+    const update = () => {
+      setTimeUntilNextGrid(getSecondsUntilNextGrid(new Date(), weekly));
+    };
 
-    const nextGridDate = new Date(now);
-    if (!weekly) {
-      nextGridDate.setDate(nextGridDate.getDate() + 1);
-      nextGridDate.setHours(0, 0, 0, 0);
-    } else {
-      //calculez le temps jusqu'au prochain lundi
-      const daysUntilNextMonday = 8 - now.getDay();
-      nextGridDate.setDate(nextGridDate.getDate() + daysUntilNextMonday);
-      nextGridDate.setHours(0, 0, 0, 0);
-    }
+    update();
+    const intervalId = window.setInterval(update, 1000);
 
-    // Calculez le temps en secondes jusqu'à la prochaine grille
-    const timeUntilNext = Math.floor(
-      (nextGridDate.getTime() - now.getTime()) / 1000
-    );
-
-    setTimeUntilNextGrid(timeUntilNext);
-
-    // Mettez à jour le décompte chaque seconde
-    const intervalId = setInterval(() => {
-      setTimeUntilNextGrid((prevTime) => prevTime - 1);
-    }, 1000);
-
-    // N'oubliez pas de nettoyer l'intervalle lorsque le composant est démonté
-    return () => clearInterval(intervalId);
+    return () => window.clearInterval(intervalId);
   }, [weekly]);
 
   const hours = Math.floor(timeUntilNextGrid / 3600);
