@@ -117,7 +117,7 @@ export function selectScheduledGrid(
   }
 
   const index = elapsedPeriods % config.cycleLength;
-  const grid = grids[index];
+  const grid: IGridData | undefined = grids[index];
 
   // Four pre-existing medium catalog records (indices 0..3) are mislabeled
   // "normal" despite containing medium puzzles. Keep them playable without
