@@ -5,6 +5,7 @@ import {
   GameMode,
   GameSession,
   applyGameMove,
+  canSwapGameCells,
   createGameIdentity,
   createInitialGame,
   getCorrectGrid,
@@ -59,6 +60,31 @@ export function useGameSession(
     [currentSession, correctGrid, mode]
   );
 
+  const canCellMove = useCallback(
+    (
+      sourceRow: number,
+      sourceCol: number,
+      destRow: number,
+      destCol: number
+    ): boolean => {
+      const current = sessionRef.current;
+      return Boolean(
+        current &&
+        identity &&
+        sameGameIdentity(current.identity, identity) &&
+        canSwapGameCells(
+          current,
+          correctGrid,
+          sourceRow,
+          sourceCol,
+          destRow,
+          destCol
+        )
+      );
+    },
+    [identity, correctGrid]
+  );
+
   const handleCellMove = useCallback(
     (
       sourceRow: number,
@@ -99,5 +125,6 @@ export function useGameSession(
     isGridSolved: currentSession?.status === "won",
     isGameIsOver: currentSession?.status === "lost",
     handleCellMove,
+    canCellMove,
   };
 }

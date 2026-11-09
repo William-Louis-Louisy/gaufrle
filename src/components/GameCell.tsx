@@ -13,14 +13,21 @@ function GameCell({
   isGridSolved,
   nonPlayableCells,
   indexValue,
+  isGameIsOver,
+  canCellMove,
 }: IGameCell) {
   const index = row * indexValue + col;
   const isNonPlayable = nonPlayableCells.includes(index);
 
+  const isLocked =
+    isNonPlayable || status === "correct" || isGridSolved || isGameIsOver;
+
   const [, ref] = useDrop({
     accept: ItemType,
+    canDrop: (item: { row: number; col: number }) =>
+      !isLocked && canCellMove(item.row, item.col, row, col),
     drop: (item: { row: number; col: number }) => {
-      if (!isNonPlayable && status !== "correct") {
+      if (!isLocked && canCellMove(item.row, item.col, row, col)) {
         onMove(item.row, item.col, row, col);
       }
     },
@@ -29,7 +36,7 @@ function GameCell({
   const [{ isDragging }, drag] = useDrag({
     type: ItemType,
     item: { row, col },
-    canDrag: !isNonPlayable && status !== "correct",
+    canDrag: !isLocked,
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),

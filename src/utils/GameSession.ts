@@ -268,21 +268,26 @@ export function decodeGameSession(
   }
 }
 
-export function applyGameMove(
+/**
+ * Authoritative rule for player exchanges.
+ * All non-solved, playable cells may be swapped (no adjacency restriction).
+ * Invalid/no-op swaps never consume a move or change saved state.
+ */
+export function canSwapGameCells(
   session: GameSession,
   correctGrid: string[][],
   sourceRow: number,
   sourceCol: number,
   destRow: number,
   destCol: number
-): GameSession {
+): boolean {
   if (
     session.status !== "playing" ||
     session.remainingMoves <= 0 ||
     ![sourceRow, sourceCol, destRow, destCol].every(Number.isInteger) ||
     (sourceRow === destRow && sourceCol === destCol)
   ) {
-    return session;
+    return false;
   }
 
   const sourceSolution = correctGrid[sourceRow]?.[sourceCol];
@@ -297,15 +302,44 @@ export function applyGameMove(
     destSolution === "❌" ||
     sourceLetter === undefined ||
     destLetter === undefined ||
+    sourceLetter === "" ||
+    destLetter === "" ||
     sourceSolution === sourceLetter ||
-    destSolution === destLetter
+    destSolution === destLetter ||
+    sourceLetter === destLetter
+  ) {
+    return false;
+  }
+
+  return true;
+}
+
+export function applyGameMove(
+  session: GameSession,
+  correctGrid: string[][],
+  sourceRow: number,
+  sourceCol: number,
+  destRow: number,
+  destCol: number
+): GameSession {
+  if (
+    !canSwapGameCells(
+      session,
+      correctGrid,
+      sourceRow,
+      sourceCol,
+      destRow,
+      destCol
+    )
   ) {
     return session;
   }
 
   const gridLetters = session.gridLetters.map((row) => [...row]);
-  gridLetters[sourceRow][sourceCol] = destLetter;
-  gridLetters[destRow][destCol] = sourceLetter;
+  [gridLetters[sourceRow][sourceCol], gridLetters[destRow][destCol]] = [
+    gridLetters[destRow][destCol],
+    gridLetters[sourceRow][sourceCol],
+  ];
 
   const remainingMoves = session.remainingMoves - 1;
   const status: GameStatus = checkIfGridIsSolved(gridLetters, correctGrid)

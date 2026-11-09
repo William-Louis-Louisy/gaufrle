@@ -13,6 +13,7 @@ import { useGameSession } from "../hooks/useGameSession";
 import { useCurrentUtcDate } from "../hooks/useCurrentUtcDate";
 import { selectScheduledGrid } from "../utils/GridSchedule";
 import GridUnavailable from "../components/GridUnavailable";
+import { gridMetadata } from "../utils/CellStatus";
 
 function HardGamepage() {
   const todayUtc = useCurrentUtcDate();
@@ -37,6 +38,7 @@ function HardGamepage() {
     isGridSolved,
     isGameIsOver,
     handleCellMove,
+    canCellMove,
   } = useGameSession("hard", todayGrid, periodStart);
 
   if (!todayGrid) return <GridUnavailable weekly />;
@@ -53,9 +55,10 @@ function HardGamepage() {
           letters={gridLetters}
           cellStatus={cellStatus}
           onCellMove={handleCellMove}
+          canCellMove={canCellMove}
           isGridSolved={isGridSolved}
           indexValue={7}
-          nonPlayableCells={[8, 10, 12, 22, 24, 26, 36, 38, 40]}
+          nonPlayableCells={gridMetadata.hard.nonPlayableCells}
           isGameIsOver={isGameIsOver}
         />
         <span className="font-semibold uppercase text-lg">
