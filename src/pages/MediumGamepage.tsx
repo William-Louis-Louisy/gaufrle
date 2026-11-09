@@ -18,7 +18,7 @@ import { gridMetadata } from "../utils/CellStatus";
 
 function MediumGamepage() {
   const publicationDate = usePublicationDate();
-  const grids: IGridData[] = mediumCatalog;
+  const grids: IGridData[] = mediumCatalog as IGridData[];
   const { grid: todayGrid, periodStart } = selectScheduledGrid(
     "medium",
     grids,
