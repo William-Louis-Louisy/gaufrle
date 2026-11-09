@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { IoCloseCircle } from "react-icons/io5";
 
 type HowToPlayModalProps = {
@@ -7,6 +7,38 @@ type HowToPlayModalProps = {
 };
 
 function HowToPlayModal({ modal, setModal }: HowToPlayModalProps) {
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (!modal) return;
+    const previousFocus = document.activeElement as HTMLElement | null;
+    closeRef.current?.focus();
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        setModal(false);
+      }
+      if (event.key !== "Tab" || !dialogRef.current) return;
+      const focusables = Array.from(dialogRef.current.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      ));
+      if (!focusables.length) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault(); last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault(); first.focus();
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      previousFocus?.focus();
+    };
+  }, [modal, setModal]);
+
   const handleCloseModal = () => {
     setModal(false);
     document.body.style.overflow = "unset";
@@ -22,22 +54,22 @@ function HowToPlayModal({ modal, setModal }: HowToPlayModalProps) {
   return (
     <div className="bg-lmntDark bg-opacity-70 h-full w-full absolute top-0 left-0 flex flex-col items-center">
       {/* MODAL CONTENT */}
-      <div className="w-full md:w-4/5 max-w-2xl theme-bg flex flex-col items-center h-screen overflow-y-auto relative theme-text">
+      <div ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby="how-to-play-title" className="w-full md:w-4/5 max-w-2xl theme-bg flex flex-col items-center h-screen overflow-y-auto relative theme-text">
         {/* CLOSE BUTTON */}
         <div className="flex flex-row items-center justify-between w-full">
           <div className="m-5 h-9 w-9">
             <span> </span>
           </div>
-          <h3 className="uppercase text-xl md:text-2xl theme-text-accent">
+          <h3 id="how-to-play-title" className="uppercase text-xl md:text-2xl theme-text-accent">
             Comment jouer ?
           </h3>
-          <button className="m-5" onClick={() => handleCloseModal()}>
-            <IoCloseCircle className="theme-text text-4xl" />
+          <button ref={closeRef} type="button" aria-label="Fermer les instructions" className="m-5" onClick={() => handleCloseModal()}>
+            <IoCloseCircle aria-hidden="true" className="theme-text text-4xl" />
           </button>
         </div>
 
         <div className="px-16 pb-16 overflow-y-auto gap-8 theme-text flex flex-col items-center">
-          <p className="text-lg font-semibold">
+          <p className="text-lg font-semibold">\n            Au clavier, utilisez Tab pour accéder aux lettres, Entrée ou Espace pour sélectionner deux cases à échanger, et Échap pour annuler la sélection. 
             Réorganisez les lettres pour former les mots corrects,
             horizontalement et verticalement. Faites glisser les lettres
             n'importe où sur le tableau. Les lettres changent de couleur pour

@@ -7,7 +7,9 @@ function DarkModeToggle() {
 
   return (
     <button
+      type="button"
       onClick={toggleDarkMode}
+      aria-label={isDarkMode ? "Activer le thème clair" : "Activer le thème sombre"}
       className="p-1.5 mb-1 rounded-full"
       title="Changez le thème de l'application"
     >

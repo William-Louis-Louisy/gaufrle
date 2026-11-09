@@ -50,11 +50,12 @@ function Header({ setModal, isMenuOpen, setIsMenuOpen }: HeaderProps) {
 
       <div className="md:flex flex-row items-center h-full gap-6 hidden ">
         {/* Naivigation */}
-        <nav className="flex flex-row items-center justify-center h-full gap-3">
+        <nav aria-label="Choisir une difficulté" className="flex flex-row items-center justify-center h-full gap-3">
           {navigation.map((item) => (
             <Link
               key={item.name}
               to={item.href}
+              aria-current={item.current ? "page" : undefined}
               className={`nav-link ${
                 item.current
                   ? "theme-text-accent theme-nav-border-accnt"
@@ -66,12 +67,16 @@ function Header({ setModal, isMenuOpen, setIsMenuOpen }: HeaderProps) {
           ))}
         </nav>
         <DarkModeToggle />
-        <button onClick={() => setModal(true)} title="Comment jouer ?">
+        <button type="button" onClick={() => setModal(true)} aria-label="Comment jouer ?">
           <FaCircleQuestion className="text-2xl mb-1 theme-text" />
         </button>
       </div>
 
       <button
+        type="button"
+        aria-label={isMenuOpen ? "Fermer le menu" : "Ouvrir le menu"}
+        aria-expanded={isMenuOpen}
+        aria-controls="mobile-navigation"
         onClick={() => handleMenu()}
         className="flex md:hidden"
         title="Ouvrir le menu"

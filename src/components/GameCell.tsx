@@ -15,6 +15,8 @@ function GameCell({
   indexValue,
   isGameIsOver,
   canCellMove,
+  isSelected = false,
+  onSelect,
 }: IGameCell) {
   const index = row * indexValue + col;
   const isNonPlayable = nonPlayableCells.includes(index);
@@ -53,19 +55,30 @@ function GameCell({
     }
   };
 
+  const cellLabel = `Ligne ${row + 1}, colonne ${col + 1}, lettre ${letter.toUpperCase()}, ${status === "correct" ? "bien placée" : status === "lineOrColumn" ? "présente dans un mot" : "à replacer"}${isSelected ? ", sélectionnée" : ""}`;
+
+  if (isNonPlayable) {
+    return <div className={getCellClass()} aria-hidden="true" />;
+  }
+
   return (
-    <div
+    <button
+      type="button"
+      disabled={isLocked}
+      aria-label={cellLabel}
+      aria-pressed={isSelected}
+      onClick={() => onSelect?.(row, col)}
       className={`${getCellClass()} ${
-        isGridSolved && !isNonPlayable ? "blink-cell" : ""
+        isGridSolved ? "blink-cell" : ""
       }`}
-      ref={isNonPlayable ? undefined : (node) => drag(ref(node))}
+      ref={(node) => drag(ref(node))}
       style={{
         opacity: isDragging ? 0.5 : 1,
         animationDelay: isGridSolved ? `${index * 0.05}s` : "0s",
       }}
     >
       {letter}
-    </div>
+    </button>
   );
 }
 export default GameCell;

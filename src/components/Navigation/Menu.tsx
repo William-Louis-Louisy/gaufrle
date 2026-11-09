@@ -58,11 +58,12 @@ function Menu({
   }, [isMenuOpen]);
 
   return (
-    <div className="absolute py-6 mt-[60px] h-[calc(100dvh-60px)] w-full theme-bg top-0 flex flex-col items-start">
+    <div id="mobile-navigation" role="navigation" aria-label="Navigation mobile" className="absolute py-6 mt-[60px] h-[calc(100dvh-60px)] w-full theme-bg top-0 flex flex-col items-start">
       {navigation.map((item, index) => (
         <a
           key={item.name}
           href={item.href}
+          aria-current={item.current ? "page" : undefined}
           className={`px-6 py-6 theme-text font-bold w-full text-left border-t flex flex-row items-center gap-4 ${
             index === navigation.length - 1 ? "border-b" : ""
           }`}
@@ -75,7 +76,7 @@ function Menu({
       {/* How to play */}
       <div className="flex flex-row items-center mt-12 mx-6 font-semibold theme-text gap-2">
         Comment jouer :
-        <button onClick={() => handleModal()}>
+        <button type="button" aria-label="Comment jouer ?" onClick={() => handleModal()}>
           <FaCircleQuestion className="text-xl theme-text" />
         </button>
       </div>
