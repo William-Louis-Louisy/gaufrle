@@ -12,8 +12,14 @@ interface GameGridProps {
     destCol: number
   ) => void;
   indexValue: number;
-  nonPlayableCells: any;
+  nonPlayableCells: ReadonlyArray<number>;
   isGameIsOver?: boolean;
+  canCellMove: (
+    sourceRow: number,
+    sourceCol: number,
+    destRow: number,
+    destCol: number
+  ) => boolean;
 }
 
 function GameGrid({
@@ -24,6 +30,7 @@ function GameGrid({
   nonPlayableCells,
   indexValue,
   isGameIsOver,
+  canCellMove,
 }: GameGridProps) {
   return (
     <div className="flex flex-col relative">
@@ -42,6 +49,8 @@ function GameGrid({
                   isGridSolved={isGridSolved}
                   indexValue={indexValue}
                   nonPlayableCells={nonPlayableCells}
+                  isGameIsOver={Boolean(isGameIsOver)}
+                  canCellMove={canCellMove}
                 />
               );
             })}

@@ -10,6 +10,13 @@ export interface IGameCell {
   ) => void;
   status: string;
   isGridSolved: boolean;
-  nonPlayableCells: any;
+  nonPlayableCells: ReadonlyArray<number>;
+  isGameIsOver: boolean;
+  canCellMove: (
+    sourceRow: number,
+    sourceCol: number,
+    destRow: number,
+    destCol: number
+  ) => boolean;
   indexValue: number;
 }
