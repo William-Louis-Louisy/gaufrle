@@ -1,41 +1,37 @@
-import React from "react";
-import { getMonday, getSunday } from "../utils/WeeklyGrid";
+import { addUtcDays, getUtcDate, getUtcMonday } from "../utils/GridSchedule";
+import { GameMode } from "../utils/GameSession";
 
-function GridTitle({ gridType }: { gridType: "normal" | "medium" | "hard" }) {
-  const today = new Date();
-  // Dates du lundi et du dimanche de la semaine actuelle
-  const currentMonday = getMonday(today);
-  const currentSunday = getSunday(today);
+interface GridTitleProps {
+  gridType: GameMode;
+  periodStart?: string;
+}
 
-  // Handle grid title
-  const handleGridType = (gridType: "normal" | "medium" | "hard") => {
-    switch (gridType) {
-      case "normal":
-        return "Gaufrette du jour";
-      case "medium":
-        return "Gauf' au suc' du jour";
-      case "hard":
-        return "Gaufre salée de la semaine";
-    }
-  };
+const formatDate = (date: string): string =>
+  new Date(date + "T00:00:00.000Z").toLocaleDateString("fr-FR", {
+    timeZone: "UTC",
+  });
 
-  // Handle date display
-  const handleDate = (gridType: "normal" | "medium" | "hard") => {
-    if (gridType === "normal" || gridType === "medium") {
-      return `du ${today.toLocaleDateString("fr-FR")}`;
-    } else {
-      return `du ${currentMonday.toLocaleDateString(
-        "fr-FR"
-      )} au ${currentSunday.toLocaleDateString("fr-FR")}`;
-    }
-  };
+function GridTitle({ gridType, periodStart }: GridTitleProps) {
+  const today = periodStart ?? getUtcDate(new Date());
+  const monday = getUtcMonday(today);
+  const sunday = addUtcDays(monday, 6);
+
+  const title =
+    gridType === "normal"
+      ? "Gaufrette du jour"
+      : gridType === "medium"
+        ? "Gauf' au suc' du jour"
+        : "Gaufre salée de la semaine";
+
+  const dates =
+    gridType === "hard"
+      ? `du ${formatDate(monday)} au ${formatDate(sunday)}`
+      : `du ${formatDate(today)}`;
 
   return (
     <div className="flex flex-col md:flex-row items-center md:gap-4 theme-text-accent">
-      <span className="font-semibold uppercase text-lg">
-        {handleGridType(gridType)}
-      </span>
-      <span>{handleDate(gridType)}</span>
+      <span className="font-semibold uppercase text-lg">{title}</span>
+      <span>{dates}</span>
     </div>
   );
 }

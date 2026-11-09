@@ -1,5 +1,4 @@
 import { DndProvider } from "react-dnd";
-import { useEffect, useState } from "react";
 import Victory from "../components/Victory";
 import GameGrid from "../components/GameGrid";
 import { IGridData } from "../types/GameGrid";
@@ -11,26 +10,22 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { TouchBackend } from "react-dnd-touch-backend";
 import WordDefinitions from "../components/WordDefinitions";
 import { useGameSession } from "../hooks/useGameSession";
-import { getMonday, getSunday } from "../utils/WeeklyGrid";
+import { useCurrentUtcDate } from "../hooks/useCurrentUtcDate";
+import { selectScheduledGrid } from "../utils/GridSchedule";
+import GridUnavailable from "../components/GridUnavailable";
 
 function HardGamepage() {
-  const [todayGrid, setTodayGrid] = useState<IGridData>();
+  const todayUtc = useCurrentUtcDate();
+  const grids: IGridData[] = require("../jsons/HardGridList.json");
+  const { grid: todayGrid, periodStart } = selectScheduledGrid(
+    "hard",
+    grids,
+    todayUtc
+  );
 
   function isTouchDevice() {
     return "ontouchstart" in window || navigator.maxTouchPoints > 0;
   }
-
-  useEffect(() => {
-    const grids: IGridData[] = require("../jsons/HardGridList.json");
-    const today = new Date().toISOString().slice(0, 10);
-    const monday = getMonday(today);
-    const sunday = getSunday(today);
-    const weeklyGrid = grids.find((grid) => {
-      const gridDate = new Date(grid.date);
-      return gridDate >= monday && gridDate <= sunday;
-    });
-    setTodayGrid(weeklyGrid);
-  }, []);
 
   const {
     isReady,
@@ -42,8 +37,9 @@ function HardGamepage() {
     isGridSolved,
     isGameIsOver,
     handleCellMove,
-  } = useGameSession("hard", todayGrid);
+  } = useGameSession("hard", todayGrid, periodStart);
 
+  if (!todayGrid) return <GridUnavailable weekly />;
   if (!isReady) return <Loading />;
 
   return (
@@ -52,7 +48,7 @@ function HardGamepage() {
       options={{ enableTouchEvents: true }}
     >
       <div className="gap-4 md:gap-6 relative col-view pt-16 w-full">
-        {todayGrid && <GridTitle gridType={todayGrid.type} />}
+        {todayGrid && <GridTitle gridType="hard" periodStart={periodStart} />}
         <GameGrid
           letters={gridLetters}
           cellStatus={cellStatus}
