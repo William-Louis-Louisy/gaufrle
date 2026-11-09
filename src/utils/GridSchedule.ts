@@ -2,10 +2,42 @@ import { IGridData } from "../types/GameGrid";
 import { GameMode } from "./GameSession";
 
 const DAY_MS = 24 * 60 * 60 * 1000;
-const WEEK_MS = 7 * DAY_MS;
 
 export const HARD_FIRST_WEEK = "2025-03-10";
 export const HARD_CYCLE_LENGTH = 130;
+
+interface GridCycleConfig {
+  firstDate: string;
+  cadenceDays: 1 | 7;
+  cycleLength: number;
+  wordCount: number;
+}
+
+/**
+ * Fixed cycle lengths preserve historical puzzle assignments. Future catalog
+ * extensions must update this configuration deliberately, not silently change
+ * the modulo (and therefore the puzzle shown on any given date).
+ */
+export const GRID_CYCLES: Readonly<Record<GameMode, Readonly<GridCycleConfig>>> = {
+  normal: {
+    firstDate: "2023-11-02",
+    cadenceDays: 1,
+    cycleLength: 8701,
+    wordCount: 6,
+  },
+  medium: {
+    firstDate: "2023-11-02",
+    cadenceDays: 1,
+    cycleLength: 2893,
+    wordCount: 6,
+  },
+  hard: {
+    firstDate: HARD_FIRST_WEEK,
+    cadenceDays: 7,
+    cycleLength: HARD_CYCLE_LENGTH,
+    wordCount: 8,
+  },
+};
 
 export interface ScheduledGrid {
   periodStart: string;
@@ -50,57 +82,61 @@ export function addUtcDays(date: string, days: number): string {
 }
 
 /**
- * The published date identifies a period, not the puzzle itself.
- * Normal/medium keep the original date catalog; hard cycles through the
- * FIRST 130 entries in their published order, starting 2025-03-10.
- * Data warning: these 130 entries contain only 65 unique puzzles (the second
- * half duplicates the first). Keep the requested 130-week schedule unchanged
- * until the content catalog is explicitly expanded or revised.
+ * The period identifies a specific play session, independent of the original
+ * publication date of its puzzle. All three modes cycle through their fixed
+ * catalog in order, with a distinct session identity at every recurrence.
+ *
+ * Known content limitation: hard has 130 published entries but only 65
+ * distinct puzzles; positions 65..129 duplicate 0..64. Preserve the existing
+ * 130-entry schedule until the catalog is explicitly curated.
  */
 export function selectScheduledGrid(
   mode: GameMode,
   grids: readonly IGridData[],
   todayUtc: string
 ): ScheduledGrid {
-  parseUtcDate(todayUtc);
-  const periodStart = mode === "hard" ? getUtcMonday(todayUtc) : todayUtc;
+  const todayTimestamp = parseUtcDate(todayUtc);
+  const config = GRID_CYCLES[mode];
+  const periodStart = config.cadenceDays === 7
+    ? getUtcMonday(todayUtc)
+    : todayUtc;
 
-  if (!Array.isArray(grids) || grids.length === 0) {
-    return { periodStart, grid: undefined };
-  }
-
-  if (mode !== "hard") {
-    const grid = grids.find((candidate) => candidate?.date === periodStart);
-    return {
-      periodStart,
-      grid:
-        grid &&
-        typeof grid.id === "string" &&
-        Array.isArray(grid.words) &&
-        grid.words.length === 6
-          ? grid
-          : undefined,
-    };
-  }
-
-  const weekIndex = Math.floor(
-    (parseUtcDate(periodStart) - parseUtcDate(HARD_FIRST_WEEK)) / WEEK_MS
+  const elapsedPeriods = Math.floor(
+    (parseUtcDate(periodStart) - parseUtcDate(config.firstDate)) /
+      (config.cadenceDays * DAY_MS)
   );
+
   if (
-    weekIndex < 0 ||
-    grids.length < HARD_CYCLE_LENGTH ||
-    grids[0]?.date !== HARD_FIRST_WEEK
+    todayTimestamp < parseUtcDate(config.firstDate) ||
+    elapsedPeriods < 0 ||
+    !Array.isArray(grids) ||
+    grids.length < config.cycleLength ||
+    grids[0]?.date !== config.firstDate
   ) {
     return { periodStart, grid: undefined };
   }
 
-  const grid = grids[weekIndex % HARD_CYCLE_LENGTH];
+  const index = elapsedPeriods % config.cycleLength;
+  const grid = grids[index];
+
+  // Four pre-existing medium catalog records (indices 0..3) are mislabeled
+  // "normal" despite containing medium puzzles. Keep them playable without
+  // changing the historical content or their existing session identities.
+  const compatibleType =
+    grid?.type === mode ||
+    (mode === "medium" && index < 4 && grid?.type === "normal");
+
+  // Avoid serving a wrong puzzle if a catalog is truncated, reordered or
+  // unexpectedly modified. These checks are cheap and run on one entry only.
   if (
     !grid ||
+    !compatibleType ||
     typeof grid.id !== "string" ||
-    grid.type !== "hard" ||
+    !grid.id ||
+    grid.date !== addUtcDays(config.firstDate, index * config.cadenceDays) ||
     !Array.isArray(grid.words) ||
-    grid.words.length !== 8
+    grid.words.length !== config.wordCount ||
+    !grid.words.every((word) => typeof word === "string" && word.length > 0)
   ) {
     return { periodStart, grid: undefined };
   }

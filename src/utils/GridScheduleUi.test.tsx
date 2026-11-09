@@ -59,4 +59,14 @@ describe("fallback and calendar display", () => {
     render(<GridTitle gridType="hard" periodStart="2027-09-06" />);
     expect(screen.queryByText("du 06/09/2027 au 12/09/2027")).not.toBeNull();
   });
+
+  test.each([
+    { mode: "normal" as const, date: "2047-08-29", title: "Gaufrette du jour" },
+    { mode: "medium" as const, date: "2031-10-04", title: "Gauf' au suc' du jour" },
+  ])("shows the new publication date after the $mode catalogue restarts", ({ mode, date, title }) => {
+    const { container } = render(<GridTitle gridType={mode} periodStart={date} />);
+    expect(container.textContent).toContain(title);
+    const [year, month, day] = date.split("-");
+    expect(container.textContent).toContain(`du ${day}/${month}/${year}`);
+  });
 });

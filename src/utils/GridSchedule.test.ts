@@ -1,6 +1,7 @@
 import type { IGridData } from "../types/GameGrid";
 import { createGameIdentity, sameGameIdentity } from "./GameSession";
 import {
+  GRID_CYCLES,
   HARD_CYCLE_LENGTH,
   HARD_FIRST_WEEK,
   addUtcDays,
@@ -114,13 +115,121 @@ describe("UTC publication dates", () => {
   });
 });
 
-describe("explicitly unavailable grids", () => {
-  test("returns no puzzle when a daily catalog has reached its end", () => {
-    expect(selectScheduledGrid("normal", normalGrids, "2047-08-29").grid)
+describe("daily grid rotation", () => {
+  const cases = [
+    {
+      mode: "normal" as const,
+      grids: normalGrids,
+      finalDate: "2047-08-28",
+      restartDate: "2047-08-29",
+      unique: 8697,
+    },
+    {
+      mode: "medium" as const,
+      grids: mediumGrids,
+      finalDate: "2031-10-03",
+      restartDate: "2031-10-04",
+      unique: 2890,
+    },
+  ];
+
+  test.each(cases)(
+    "cycles $mode after the last entry without losing any day",
+    ({ mode, grids, finalDate, restartDate, unique }) => {
+      const config = GRID_CYCLES[mode];
+      expect(config.cadenceDays).toBe(1);
+      expect(grids).toHaveLength(config.cycleLength);
+      expect(new Set(grids.map((grid) => grid.id)).size).toBe(unique);
+
+      const first = selectScheduledGrid(mode, grids, "2023-11-02");
+      const last = selectScheduledGrid(mode, grids, finalDate);
+      const restarted = selectScheduledGrid(mode, grids, restartDate);
+      const second = selectScheduledGrid(mode, grids, addUtcDays(restartDate, 1));
+
+      expect(first.grid).toBe(grids[0]);
+      expect(last.grid).toBe(grids[grids.length - 1]);
+      expect(restarted.grid).toBe(grids[0]);
+      expect(second.grid).toBe(grids[1]);
+      expect(restarted.periodStart).toBe(restartDate);
+      expect(second.periodStart).toBe(addUtcDays(restartDate, 1));
+
+      const originalIdentity = createGameIdentity(
+        mode, first.periodStart, first.grid!
+      );
+      const repeatedIdentity = createGameIdentity(
+        mode, restarted.periodStart, restarted.grid!
+      );
+      expect(sameGameIdentity(originalIdentity, repeatedIdentity)).toBe(false);
+    }
+  );
+
+  test.each(cases)(
+    "repeats $mode on subsequent complete cycles without date drift",
+    ({ mode, grids }) => {
+      const config = GRID_CYCLES[mode];
+      const first = selectScheduledGrid(mode, grids, config.firstDate);
+      for (const cycles of [1, 2, 5]) {
+        const repeatDate = addUtcDays(
+          config.firstDate,
+          config.cycleLength * cycles
+        );
+        const replay = selectScheduledGrid(mode, grids, repeatDate);
+        expect(replay.grid).toBe(first.grid);
+        expect(replay.periodStart).toBe(repeatDate);
+        expect(replay.periodStart).not.toBe(first.periodStart);
+      }
+    }
+  );
+
+  test("preserves the already published normal and medium assignments", () => {
+    for (const day of ["2023-11-02", "2026-03-29", "2026-10-25", "2026-11-09"]) {
+      expect(selectScheduledGrid("normal", normalGrids, day).grid)
+        .toBe(normalGrids.find((grid) => grid.date === day));
+      expect(selectScheduledGrid("medium", mediumGrids, day).grid)
+        .toBe(mediumGrids.find((grid) => grid.date === day));
+    }
+  });
+
+  test("keeps four historically mislabeled medium records playable", () => {
+    for (let index = 0; index < 4; index += 1) {
+      const day = addUtcDays("2023-11-02", index);
+      expect(mediumGrids[index].type).toBe("normal");
+      expect(selectScheduledGrid("medium", mediumGrids, day).grid)
+        .toBe(mediumGrids[index]);
+      const replayDate = addUtcDays(day, mediumGrids.length);
+      expect(selectScheduledGrid("medium", mediumGrids, replayDate).grid)
+        .toBe(mediumGrids[index]);
+    }
+  });
+
+  test("does not serve a puzzle before the first publication date", () => {
+    for (const { mode, grids } of cases) {
+      expect(selectScheduledGrid(mode, grids, "2023-11-01")).toEqual({
+        periodStart: "2023-11-01",
+        grid: undefined,
+      });
+    }
+  });
+
+  test("rejects missing, truncated or corrupted daily catalogs", () => {
+    expect(selectScheduledGrid("normal", [], "2047-08-29").grid).toBeUndefined();
+    expect(
+      selectScheduledGrid("normal", normalGrids.slice(0, -1), "2047-08-29").grid
+    ).toBeUndefined();
+
+    const missingWords = [...normalGrids];
+    missingWords[0] = { ...missingWords[0], words: [] };
+    expect(selectScheduledGrid("normal", missingWords, "2047-08-29").grid)
       .toBeUndefined();
-    expect(selectScheduledGrid("medium", mediumGrids, "2031-10-04").grid)
+
+    const corruptedDate = [...mediumGrids];
+    corruptedDate[0] = { ...corruptedDate[0], date: "2023-11-03" };
+    expect(selectScheduledGrid("medium", corruptedDate, "2031-10-04").grid)
       .toBeUndefined();
   });
+});
+
+describe("explicitly unavailable grids", () => {
 
   test("returns no puzzle for an empty, incomplete or corrupted weekly catalog", () => {
     expect(selectScheduledGrid("hard", [], "2027-09-06").grid).toBeUndefined();
