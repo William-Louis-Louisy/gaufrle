@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import GameCell from "./GameCell";
 
 interface GameGridProps {
@@ -32,8 +32,31 @@ function GameGrid({
   isGameIsOver,
   canCellMove,
 }: GameGridProps) {
+  const [selected, setSelected] = useState<{ row: number; col: number } | null>(null);
+
+  const selectCell = (row: number, col: number) => {
+    if (!selected) {
+      setSelected({ row, col });
+      return;
+    }
+    if (selected.row === row && selected.col === col) {
+      setSelected(null);
+      return;
+    }
+    if (canCellMove(selected.row, selected.col, row, col)) {
+      onCellMove(selected.row, selected.col, row, col);
+      setSelected(null);
+    } else {
+      setSelected({ row, col });
+    }
+  };
+
   return (
-    <div className="flex flex-col relative">
+    <div className="flex flex-col relative" role="group" aria-label="Grille de lettres" onKeyDown={(event) => {
+      if (event.key === "Escape") setSelected(null);
+    }}>
+      <p className="sr-only">Pour échanger deux lettres, sélectionnez une première case, puis une seconde avec Entrée ou Espace. Échap annule la sélection. Utilisez Tab pour passer d’une case à l’autre.</p>
+      <span className="sr-only" role="status" aria-live="polite">{selected ? `Lettre sélectionnée, ligne ${selected.row + 1}, colonne ${selected.col + 1}.` : ""}</span>
       {letters.map((row, i) => {
         return (
           <div className="flex flex-row" key={i}>
@@ -51,6 +74,8 @@ function GameGrid({
                   nonPlayableCells={nonPlayableCells}
                   isGameIsOver={Boolean(isGameIsOver)}
                   canCellMove={canCellMove}
+                  isSelected={selected?.row === i && selected?.col === j}
+                  onSelect={selectCell}
                 />
               );
             })}
