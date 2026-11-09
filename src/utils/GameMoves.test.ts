@@ -132,6 +132,25 @@ describe.each(["normal", "medium", "hard"] as GameMode[])(
   }
 );
 
+test("two identical misplaced letters are a true no-op, even when neither is locked", () => {
+  const solution = [["a", "a", "b", "b"]];
+  const session: GameSession = {
+    version: 2,
+    identity: { mode: "normal", periodStart: "2026-11-09", gridId: "same-letter" },
+    gridLetters: [["b", "b", "a", "a"]],
+    minMoves: 4,
+    moveLimit: 6,
+    remainingMoves: 3,
+    status: "playing",
+  };
+
+  expect(session.gridLetters[0][0]).not.toBe(solution[0][0]);
+  expect(session.gridLetters[0][1]).not.toBe(solution[0][1]);
+  expect(canSwapGameCells(session, solution, 0, 0, 0, 1)).toBe(false);
+  expect(applyGameMove(session, solution, 0, 0, 0, 1)).toBe(session);
+  expect(session.remainingMoves).toBe(3);
+});
+
 describe("last move and state consistency", () => {
   const correctGrid = [["a", "b"], ["c", "d"]];
   const base: GameSession = {

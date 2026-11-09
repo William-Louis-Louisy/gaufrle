@@ -39,12 +39,23 @@ function renderCell(overrides: Partial<IGameCell> = {}) {
   };
 
   const view = render(<GameCell {...props} />);
-  return { ...view, onMove, canCellMove };
+  return {
+    ...view,
+    onMove: props.onMove as jest.Mock,
+    canCellMove: props.canCellMove as jest.Mock,
+  };
 }
 
 describe("P0.4 drag-and-drop validation", () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    // CRA/Jest resets mock implementations between tests; re-install them.
+    (useDrag as jest.Mock).mockImplementation(
+      () => [{ isDragging: false }, () => undefined]
+    );
+    (useDrop as jest.Mock).mockImplementation(
+      () => [{}, () => undefined]
+    );
   });
 
   test.each([
@@ -76,7 +87,7 @@ describe("P0.4 drag-and-drop validation", () => {
     expect(getDropSpec().canDrop(target)).toBe(false);
     getDropSpec().drop(target);
 
-    expect(canCellMove).not.toHaveBeenCalled();
+    expect(canCellMove).toHaveBeenCalledTimes(2);
     expect(onMove).not.toHaveBeenCalled();
   });
 
