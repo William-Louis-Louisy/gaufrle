@@ -1,3 +1,6 @@
+import hardCatalog from "../jsons/HardGridList.json";
+import mediumCatalog from "../jsons/MediumGridList.json";
+import normalCatalog from "../jsons/NormalGridList.json";
 import type { GameMode, GameSession } from "./GameSession";
 import { createInitialGame, decodeGameSession, getCorrectGrid } from "./GameSession";
 import type { IGridData } from "../types/GameGrid";
@@ -91,9 +94,9 @@ describe("scoring is consistent with persisted game budgets", () => {
     hard: 1.75,
   };
   const fixtures: Record<GameMode, IGridData> = {
-    normal: require("../jsons/NormalGridList.json")[0],
-    medium: require("../jsons/MediumGridList.json")[4],
-    hard: require("../jsons/HardGridList.json")[0],
+    normal: normalCatalog[0],
+    medium: mediumCatalog[4],
+    hard: hardCatalog[0],
   };
 
   test.each(["normal", "medium", "hard"] as GameMode[])(
