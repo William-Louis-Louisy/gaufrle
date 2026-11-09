@@ -94,9 +94,9 @@ describe("scoring is consistent with persisted game budgets", () => {
     hard: 1.75,
   };
   const fixtures: Record<GameMode, IGridData> = {
-    normal: normalCatalog[0],
-    medium: mediumCatalog[4],
-    hard: hardCatalog[0],
+    normal: (normalCatalog as IGridData[])[0],
+    medium: (mediumCatalog as IGridData[])[4],
+    hard: (hardCatalog as IGridData[])[0],
   };
 
   test.each(["normal", "medium", "hard"] as GameMode[])(
