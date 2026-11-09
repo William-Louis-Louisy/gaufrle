@@ -1,5 +1,5 @@
 import { DndProvider } from "react-dnd";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import Victory from "../components/Victory";
 import GameGrid from "../components/GameGrid";
 import { IGridData } from "../types/GameGrid";
@@ -8,140 +8,43 @@ import GridTitle from "../components/GridTitle";
 import SeeSolution from "../components/SeeSolution";
 import Loading from "../components/Navigation/Loading";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { getMonday, getSunday } from "../utils/WeeklyGrid";
-import WordDefinitions from "../components/WordDefinitions";
-import { initializeHardGame } from "../utils/InitializeGame";
-import { checkIfGridIsSolved, verifyCellStatus } from "../utils/CellStatus";
 import { TouchBackend } from "react-dnd-touch-backend";
+import WordDefinitions from "../components/WordDefinitions";
+import { useGameSession } from "../hooks/useGameSession";
+import { getMonday, getSunday } from "../utils/WeeklyGrid";
 
 function HardGamepage() {
-  // STATES
-  const [loading, setLoading] = useState<boolean>(true);
-  const [previousGrid, setPreviousGrid] = useState<any>();
   const [todayGrid, setTodayGrid] = useState<IGridData>();
-  const [minMoves, setMinMoves] = useState<number>(0);
-  const [remainingMoves, setRemainingMoves] = useState<number>(0);
-  const [correctGrid, setCorrectGrid] = useState<string[][]>([]);
-  const [gridLetters, setGridLetters] = useState<string[][]>([]);
-  const [isGridSolved, setIsGridSolved] = useState<boolean>(false);
-  const [isGameIsOver, setIsGameIsOver] = useState<boolean>(true);
-  const [cellStatus, setCellStatus] = useState<string[][]>(
-    Array.from({ length: 7 }, () => Array(7).fill("default"))
-  );
 
   function isTouchDevice() {
-    if ("ontouchstart" in window || navigator.maxTouchPoints) {
-      return true;
-    }
-    return false;
+    return "ontouchstart" in window || navigator.maxTouchPoints > 0;
   }
 
-  // Get this week's grid
-  const today = new Date().toISOString().slice(0, 10);
-  // Dates du lundi et du dimanche de la semaine actuelle
-  const currentMonday = getMonday(today);
-  const currentSunday = getSunday(today);
-  // GET THIS WEEK'S GRID
   useEffect(() => {
-    // Load json file
-    const hardGridListData = require("../jsons/HardGridList.json");
-
-    // Find the grid with the same week number as today
-    const todayGridData = hardGridListData.find((grid: any) => {
+    const grids: IGridData[] = require("../jsons/HardGridList.json");
+    const today = new Date().toISOString().slice(0, 10);
+    const monday = getMonday(today);
+    const sunday = getSunday(today);
+    const weeklyGrid = grids.find((grid) => {
       const gridDate = new Date(grid.date);
-
-      return gridDate >= currentMonday && gridDate <= currentSunday;
+      return gridDate >= monday && gridDate <= sunday;
     });
-    if (todayGridData) {
-      setTodayGrid(todayGridData);
-    }
+    setTodayGrid(weeklyGrid);
   }, []);
 
-  // GET SAVED GRID FROM LOCAL STORAGE IF ANY AND IF DATE IS IN THE SAME WEEK
-  useEffect(() => {
-    const savedGrid = localStorage.getItem("currentHardGrid");
-    if (savedGrid) {
-      const savedGridData = JSON.parse(savedGrid);
-      const gridDate = new Date(savedGridData.date);
-      if (gridDate >= currentMonday && gridDate <= currentSunday) {
-        setPreviousGrid(savedGridData);
-        setLoading(false);
-      }
-    }
-  }, []);
+  const {
+    isReady,
+    minMoves,
+    remainingMoves,
+    correctGrid,
+    gridLetters,
+    cellStatus,
+    isGridSolved,
+    isGameIsOver,
+    handleCellMove,
+  } = useGameSession("hard", todayGrid);
 
-  // INITIALIZE GAME
-  useEffect(() => {
-    if (todayGrid && todayGrid.words.length > 0) {
-      initializeHardGame({
-        todayGrid,
-        setLoading,
-        setRemainingMoves,
-        setCellStatus,
-        setCorrectGrid,
-        setGridLetters,
-        previousGrid,
-        setIsGameIsOver,
-        setMinMoves,
-      });
-    }
-  }, [todayGrid]);
-
-  // HANDLE CELL MOVE
-  const handleCellMove = (
-    sourceRow: number,
-    sourceCol: number,
-    destRow: number,
-    destCol: number
-  ) => {
-    // Check if we can still make a move
-    if (remainingMoves <= 0) return;
-
-    const newGridLetters = [...gridLetters.map((row) => [...row])];
-    [newGridLetters[sourceRow][sourceCol], newGridLetters[destRow][destCol]] = [
-      newGridLetters[destRow][destCol],
-      newGridLetters[sourceRow][sourceCol],
-    ];
-    setGridLetters(newGridLetters);
-    verifyCellStatus(newGridLetters, setCellStatus, correctGrid, "hard");
-
-    // Update remaining moves
-    setRemainingMoves((prev) => prev - 1);
-
-    const dateTime = new Date().toISOString().slice(0, 10);
-
-    // Save current grid to local storage
-    localStorage.setItem(
-      "currentHardGrid",
-      JSON.stringify({
-        date: dateTime,
-        gridLetters: newGridLetters,
-        cellStatus: cellStatus,
-        remainingMoves: remainingMoves - 1,
-        isGameIsOver: isGameIsOver,
-        isGridSolved: isGridSolved,
-      })
-    );
-  };
-
-  useEffect(() => {
-    if (!loading) {
-      const isSolved = checkIfGridIsSolved(gridLetters, correctGrid);
-      setIsGridSolved(isSolved);
-    }
-  }, [gridLetters, correctGrid, loading]);
-
-  useEffect(() => {
-    if (isGridSolved) {
-      setIsGameIsOver(false);
-    } else if (remainingMoves === 0) {
-      setIsGameIsOver(true);
-    }
-  }, [remainingMoves, isGridSolved]);
-
-  if (loading) {
-    return <Loading />;
-  }
+  if (!isReady) return <Loading />;
 
   return (
     <DndProvider

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import CountDown from "./CountDown";
 import { HiStar } from "react-icons/hi2";
 
@@ -21,7 +21,7 @@ function Victory({
   }>();
 
   // RETOURNER UN MESSAGE EN FONCTION DU NOMBRE DE COUPS RESTANTS
-  const getVictoryMessage = () => {
+  const getVictoryMessage = useCallback(() => {
     if (remainingMoves > maxMoves - minMoves) {
       setVictoryMessage({
         message: "WOW !!!",
@@ -41,11 +41,11 @@ function Victory({
         stars: [<HiStar />],
       });
     }
-  };
+  }, [remainingMoves, maxMoves, minMoves]);
 
   useEffect(() => {
     getVictoryMessage();
-  }, [remainingMoves]);
+  }, [getVictoryMessage]);
 
   return (
     <div className="w-full md:w-4/5 2xl:w-[70%] p-4 theme-lmnt grid grid-cols-3 gap-4 md:rounded-md">
