@@ -9,6 +9,8 @@ function SeeSolution({ correctGrid }: { correctGrid: string[][] }) {
         className={`uppercase theme-text px-3 py-2 rounded-md font-bold ${
           isDisplayed ? "theme-bg" : "bg-valid"
         }`}
+        type="button"
+        aria-expanded={isDisplayed}
         onClick={() => setIsDisplayed(!isDisplayed)}
       >
         {isDisplayed ? "Cacher la solution" : "Voir la solution"}
