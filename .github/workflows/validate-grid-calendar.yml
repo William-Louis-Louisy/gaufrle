@@ -1,85 +1,27 @@
 name: Validate grids and game sessions
 
+# Run the same checks on every PR: path filters can silently skip tests when
+# an unrelated file changes, leaving required checks pending or absent.
 on:
   pull_request:
-    paths:
-      - 'src/jsons/*GridList.json'
-      - 'scripts/grid-calendar.cjs'
-      - 'scripts/reindex-grid-dates.cjs'
-      - 'scripts/validate-grid-calendar.cjs'
-      - 'scripts/grid-calendar.test.cjs'
-      - 'package.json'
-      - 'package-lock.json'
-      - 'src/pages/*Gamepage.tsx'
-      - 'src/hooks/**'
-      - 'src/utils/GameSession*'
-      - 'src/utils/Scoring*'
-      - 'src/routes/Routes.tsx'
-      - 'src/components/WordDefinitions.tsx'
-      - 'src/utils/Updates.ts'
-      - 'src/components/Victory.test.tsx'
-      - 'src/utils/GameMoves.test.ts'
-      - 'src/utils/GameEngineRegression.test.ts'
-      - 'src/components/GameCell*'
-      - 'src/components/GameGridAccessibility.test.tsx'
-      - 'src/components/HowToPlayModal.tsx'
-      - 'src/components/Navigation/**'
-      - 'src/components/DarkModeToggle.tsx'
-      - 'src/components/SeeSolution.tsx'
-      - 'src/styles/global.css'
-      - 'src/components/GameGrid.tsx'
-      - 'src/types/GameCell.ts'
-      - 'src/utils/LegacySaveCompatibility.ts'
-      - 'src/utils/CellStatus.ts'
-      - 'src/utils/GridSchedule*'
-      - 'src/utils/PublicationClock*'
-      - 'src/components/GridUnavailable.tsx'
-      - 'src/components/GridTitle.tsx'
-      - 'src/components/CountDown.tsx'
-      - 'src/components/Victory.tsx'
-      - '.github/workflows/validate-grid-calendar.yml'
   push:
     branches: [main]
-    paths:
-      - 'src/jsons/*GridList.json'
-      - 'scripts/grid-calendar.cjs'
-      - 'scripts/reindex-grid-dates.cjs'
-      - 'scripts/validate-grid-calendar.cjs'
-      - 'scripts/grid-calendar.test.cjs'
-      - 'package.json'
-      - 'package-lock.json'
-      - 'src/pages/*Gamepage.tsx'
-      - 'src/hooks/**'
-      - 'src/utils/GameSession*'
-      - 'src/utils/Scoring*'
-      - 'src/routes/Routes.tsx'
-      - 'src/components/WordDefinitions.tsx'
-      - 'src/utils/Updates.ts'
-      - 'src/components/Victory.test.tsx'
-      - 'src/utils/GameMoves.test.ts'
-      - 'src/utils/GameEngineRegression.test.ts'
-      - 'src/components/GameCell*'
-      - 'src/components/GameGridAccessibility.test.tsx'
-      - 'src/components/HowToPlayModal.tsx'
-      - 'src/components/Navigation/**'
-      - 'src/components/DarkModeToggle.tsx'
-      - 'src/components/SeeSolution.tsx'
-      - 'src/styles/global.css'
-      - 'src/components/GameGrid.tsx'
-      - 'src/types/GameCell.ts'
-      - 'src/utils/LegacySaveCompatibility.ts'
-      - 'src/utils/CellStatus.ts'
-      - 'src/utils/GridSchedule*'
-      - 'src/utils/PublicationClock*'
-      - 'src/components/GridUnavailable.tsx'
-      - 'src/components/GridTitle.tsx'
-      - 'src/components/CountDown.tsx'
-      - 'src/components/Victory.tsx'
-      - '.github/workflows/validate-grid-calendar.yml'
+  workflow_dispatch:
+
+# PRs only need to read repository contents; no write token is required.
+permissions:
+  contents: read
+
+# Keep the most recent run for each PR or branch, avoiding stale checks.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 jobs:
   validate:
+    name: validate
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -91,18 +33,20 @@ jobs:
         run: npm run validate:grids
 
   session:
+    name: session
     runs-on: ubuntu-latest
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'npm'
-      - name: Install dependencies
+      - name: Install locked dependencies
         run: npm ci
       - name: TypeScript check
         run: npx tsc --noEmit
-      - name: Test game sessions
+      - name: Test game sessions and UI
         env:
           CI: 'true'
         run: npm test -- --watch=false --runInBand
