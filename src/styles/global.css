@@ -215,7 +215,7 @@ h3 {
   outline-color: #facc15;
 }
 
-[aria-pressed="true"].cell {
+[aria-pressed="true"] {
   outline: 3px dashed currentColor;
   outline-offset: 2px;
 }
