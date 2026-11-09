@@ -1,4 +1,5 @@
-import { addUtcDays, getUtcDate, getUtcMonday } from "../utils/GridSchedule";
+import { addUtcDays, getUtcMonday } from "../utils/GridSchedule";
+import { getPublicationDate } from "../utils/PublicationClock";
 import { GameMode } from "../utils/GameSession";
 
 interface GridTitleProps {
@@ -12,7 +13,7 @@ const formatDate = (date: string): string =>
   });
 
 function GridTitle({ gridType, periodStart }: GridTitleProps) {
-  const today = periodStart ?? getUtcDate(new Date());
+  const today = periodStart ?? getPublicationDate(new Date());
   const monday = getUtcMonday(today);
   const sunday = addUtcDays(monday, 6);
 
