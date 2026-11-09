@@ -13,9 +13,9 @@ import {
 import { IGridData } from "../types/GameGrid";
 
 const fixtures: Record<GameMode, IGridData> = {
-  normal: normalCatalog[0],
-  medium: mediumCatalog[4],
-  hard: hardCatalog[0],
+  normal: (normalCatalog as IGridData[])[0],
+  medium: (mediumCatalog as IGridData[])[4],
+  hard: (hardCatalog as IGridData[])[0],
 };
 
 type Position = { row: number; col: number };
