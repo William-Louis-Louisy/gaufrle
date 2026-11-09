@@ -1,0 +1,35 @@
+name: Validate grid calendar
+
+on:
+  pull_request:
+    paths:
+      - 'src/jsons/*GridList.json'
+      - 'scripts/grid-calendar.cjs'
+      - 'scripts/reindex-grid-dates.cjs'
+      - 'scripts/validate-grid-calendar.cjs'
+      - 'scripts/grid-calendar.test.cjs'
+      - 'package.json'
+      - '.github/workflows/validate-grid-calendar.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'src/jsons/*GridList.json'
+      - 'scripts/grid-calendar.cjs'
+      - 'scripts/reindex-grid-dates.cjs'
+      - 'scripts/validate-grid-calendar.cjs'
+      - 'scripts/grid-calendar.test.cjs'
+      - 'package.json'
+      - '.github/workflows/validate-grid-calendar.yml'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Test UTC calendar logic
+        run: npm run test:calendar
+      - name: Verify every puzzle date
+        run: npm run validate:grids
