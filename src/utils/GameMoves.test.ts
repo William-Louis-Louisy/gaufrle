@@ -1,3 +1,6 @@
+import hardCatalog from "../jsons/HardGridList.json";
+import mediumCatalog from "../jsons/MediumGridList.json";
+import normalCatalog from "../jsons/NormalGridList.json";
 import { gridMetadata } from "./CellStatus";
 import {
   GameMode,
@@ -10,9 +13,9 @@ import {
 import { IGridData } from "../types/GameGrid";
 
 const fixtures: Record<GameMode, IGridData> = {
-  normal: require("../jsons/NormalGridList.json")[0],
-  medium: require("../jsons/MediumGridList.json")[4],
-  hard: require("../jsons/HardGridList.json")[0],
+  normal: normalCatalog[0],
+  medium: mediumCatalog[4],
+  hard: hardCatalog[0],
 };
 
 type Position = { row: number; col: number };
