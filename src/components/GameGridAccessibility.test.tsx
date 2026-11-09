@@ -1,13 +1,13 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import GameGrid from "./GameGrid";
 
-jest.mock("react-dnd", () => ({
+vi.mock("react-dnd", () => ({
   useDrag: () => [{ isDragging: false }, () => undefined],
   useDrop: () => [{}, () => undefined],
 }));
 
-function renderGrid(canCellMove = jest.fn(() => true)) {
-  const onCellMove = jest.fn();
+function renderGrid(canCellMove = vi.fn(() => true)) {
+  const onCellMove = vi.fn();
   render(
     <GameGrid
       letters={[["b", "a"], ["", "c"]]}
@@ -49,7 +49,7 @@ describe("P1.4 accessible game interactions", () => {
   });
 
   test("does not exchange disallowed cells and Escape cancels selection", () => {
-    const { onCellMove } = renderGrid(jest.fn(() => false));
+    const { onCellMove } = renderGrid(vi.fn(() => false));
     const first = screen.getByRole("button", { name: /ligne 1, colonne 1/i });
     const second = screen.getByRole("button", { name: /ligne 1, colonne 2/i });
     fireEvent.click(first);
