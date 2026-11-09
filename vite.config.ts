@@ -8,6 +8,7 @@ export default defineConfig({
   build: { outDir: "dist" },
   test: {
     globals: true,
+    include: ["src/**/*.{test,spec}.{ts,tsx}"],
     environment: "jsdom",
     setupFiles: ["./src/test/setup.ts"],
     pool: "forks",
