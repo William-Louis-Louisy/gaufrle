@@ -6,133 +6,38 @@ import { IGridData } from "../types/GameGrid";
 import GameOver from "../components/GameOver";
 import GridTitle from "../components/GridTitle";
 import SeeSolution from "../components/SeeSolution";
+import Loading from "../components/Navigation/Loading";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { TouchBackend } from "react-dnd-touch-backend";
-import Loading from "../components/Navigation/Loading";
 import WordDefinitions from "../components/WordDefinitions";
-import { initializeNormalGame } from "../utils/InitializeGame";
-import { checkIfGridIsSolved, verifyCellStatus } from "../utils/CellStatus";
+import { useGameSession } from "../hooks/useGameSession";
 
 export default function NormalGamepage() {
-  // STATES
-  const [loading, setLoading] = useState<boolean>(true);
-  const [previousGrid, setPreviousGrid] = useState<any>();
   const [todayGrid, setTodayGrid] = useState<IGridData>();
-  const [minMoves, setMinMoves] = useState<number>(0);
-  const [remainingMoves, setRemainingMoves] = useState<number>(0);
-  const [correctGrid, setCorrectGrid] = useState<string[][]>([]);
-  const [gridLetters, setGridLetters] = useState<string[][]>([]);
-  const [isGridSolved, setIsGridSolved] = useState<boolean>(false);
-  const [isGameIsOver, setIsGameIsOver] = useState<boolean>(true);
-  const [cellStatus, setCellStatus] = useState<string[][]>(
-    Array.from({ length: 5 }, () => Array(5).fill("default"))
-  );
 
   function isTouchDevice() {
-    if ("ontouchstart" in window || navigator.maxTouchPoints) {
-      return true;
-    }
-    return false;
+    return "ontouchstart" in window || navigator.maxTouchPoints > 0;
   }
 
   useEffect(() => {
-    // Load json file
-    const normalGridListData = require("../jsons/NormalGridList.json");
-    // Get today's grid
+    const grids: IGridData[] = require("../jsons/NormalGridList.json");
     const today = new Date().toISOString().slice(0, 10);
-    const todayGridData = normalGridListData.find(
-      (grid: any) => grid.date === today
-    );
-    if (todayGridData) {
-      setTodayGrid(todayGridData);
-    }
+    setTodayGrid(grids.find((grid) => grid.date === today));
   }, []);
 
-  // GET SAVED GRID FROM LOCAL STORAGE IF ANY AND IF DATE IS TODAY
-  useEffect(() => {
-    const savedGrid = localStorage.getItem("currentNormalGrid");
-    if (savedGrid) {
-      const savedGridData = JSON.parse(savedGrid);
-      const savedGridDate = savedGridData.date;
-      const today = new Date().toISOString().slice(0, 10);
-      if (savedGridDate === today) {
-        setPreviousGrid(savedGridData);
-        setLoading(false);
-      }
-    }
-  }, []);
+  const {
+    isReady,
+    minMoves,
+    remainingMoves,
+    correctGrid,
+    gridLetters,
+    cellStatus,
+    isGridSolved,
+    isGameIsOver,
+    handleCellMove,
+  } = useGameSession("normal", todayGrid);
 
-  useEffect(() => {
-    if (todayGrid && todayGrid.words.length > 0) {
-      initializeNormalGame({
-        todayGrid,
-        setLoading,
-        setRemainingMoves,
-        setCellStatus,
-        setCorrectGrid,
-        setGridLetters,
-        previousGrid,
-        setIsGameIsOver,
-        setMinMoves,
-      });
-    }
-  }, [todayGrid]);
-
-  // HANDLE CELL MOVE
-  const handleCellMove = (
-    sourceRow: number,
-    sourceCol: number,
-    destRow: number,
-    destCol: number
-  ) => {
-    // Check if we can still make a move
-    if (remainingMoves <= 0) return;
-
-    const newGridLetters = [...gridLetters.map((row) => [...row])];
-    [newGridLetters[sourceRow][sourceCol], newGridLetters[destRow][destCol]] = [
-      newGridLetters[destRow][destCol],
-      newGridLetters[sourceRow][sourceCol],
-    ];
-    setGridLetters(newGridLetters);
-    verifyCellStatus(newGridLetters, setCellStatus, correctGrid, "normal");
-
-    // Update remaining moves
-    setRemainingMoves((prev) => prev - 1);
-
-    const dateTime = new Date().toISOString().slice(0, 10);
-
-    // Save grid to local storage
-    localStorage.setItem(
-      "currentNormalGrid",
-      JSON.stringify({
-        date: dateTime,
-        gridLetters: newGridLetters,
-        cellStatus: cellStatus,
-        remainingMoves: remainingMoves - 1,
-        isGameIsOver: isGameIsOver,
-        isGridSolved: isGridSolved,
-      })
-    );
-  };
-
-  useEffect(() => {
-    if (!loading) {
-      const isSolved = checkIfGridIsSolved(gridLetters, correctGrid);
-      setIsGridSolved(isSolved);
-    }
-  }, [gridLetters, correctGrid, loading]);
-
-  useEffect(() => {
-    if (isGridSolved) {
-      setIsGameIsOver(false);
-    } else if (remainingMoves === 0) {
-      setIsGameIsOver(true);
-    }
-  }, [remainingMoves, isGridSolved]);
-
-  if (loading) {
-    return <Loading />;
-  }
+  if (!isReady) return <Loading />;
 
   return (
     <DndProvider

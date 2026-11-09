@@ -58,12 +58,11 @@ const countOccurrences = (
 };
 
 // Fonction principale pour vérifier le statut de chaque cellule
-export const verifyCellStatus = (
+export const calculateCellStatus = (
   newGridLetters: string[][],
-  setCellStatus: any,
   correctGrid: string[][],
   gridType: "normal" | "medium" | "hard"
-) => {
+): string[][] => {
   // Initialisation du statut des cellules à 'default'
   const newCellStatus = Array.from({ length: correctGrid.length }, () =>
     Array(correctGrid[0].length).fill("default")
@@ -146,15 +145,35 @@ export const verifyCellStatus = (
     }
   }
 
-  // Mettre à jour l'état de l'application avec le nouveau statut des cellules
-  setCellStatus(newCellStatus);
+  return newCellStatus;
+};
+
+// Backwards-compatible setter wrapper. New game sessions use the pure function.
+export const verifyCellStatus = (
+  newGridLetters: string[][],
+  setCellStatus: (status: string[][]) => void,
+  correctGrid: string[][],
+  gridType: "normal" | "medium" | "hard"
+): void => {
+  setCellStatus(calculateCellStatus(newGridLetters, correctGrid, gridType));
 };
 
 // CHECK IF GRID IS SOLVED
 export const checkIfGridIsSolved = (
   currentGrid: string[][],
   correctGrid: string[][]
-) => {
+): boolean => {
+  if (
+    correctGrid.length === 0 ||
+    currentGrid.length !== correctGrid.length ||
+    correctGrid.some(
+      (row, index) =>
+        row.length === 0 || currentGrid[index]?.length !== row.length
+    )
+  ) {
+    return false;
+  }
+
   for (let i = 0; i < currentGrid.length; i++) {
     for (let j = 0; j < currentGrid[i].length; j++) {
       if (correctGrid[i][j] === "❌" && currentGrid[i][j] === "") {
