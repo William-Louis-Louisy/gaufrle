@@ -30,7 +30,7 @@ export default function NormalGamepage() {
 
   const {
     isReady,
-    minMoves,
+    victoryScore,
     remainingMoves,
     correctGrid,
     gridLetters,
@@ -66,8 +66,8 @@ export default function NormalGamepage() {
           <span className="text-xl font-bold ml-1">{remainingMoves}</span>
         </span>
 
-        {isGridSolved && (
-          <Victory minMoves={minMoves} remainingMoves={remainingMoves} />
+        {isGridSolved && victoryScore && (
+          <Victory score={victoryScore} />
         )}
 
         {todayGrid && isGameIsOver && (
