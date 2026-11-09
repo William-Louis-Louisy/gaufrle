@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { IGridData } from "../types/GameGrid";
 import { calculateCellStatus } from "../utils/CellStatus";
+import { calculateVictoryScore } from "../utils/Scoring";
 import {
   GameMode,
   GameSession,
@@ -58,6 +59,13 @@ export function useGameSession(
         ? calculateCellStatus(currentSession.gridLetters, correctGrid, mode)
         : [],
     [currentSession, correctGrid, mode]
+  );
+
+  // Derive the result from the persisted v2 session. Never store a separate
+  // rating that could fall out of sync with the remaining move count.
+  const victoryScore = useMemo(
+    () => (currentSession ? calculateVictoryScore(currentSession) : null),
+    [currentSession]
   );
 
   const canCellMove = useCallback(
@@ -121,6 +129,7 @@ export function useGameSession(
     gridLetters: currentSession?.gridLetters ?? [],
     cellStatus,
     minMoves: currentSession?.minMoves ?? 0,
+    victoryScore,
     remainingMoves: currentSession?.remainingMoves ?? 0,
     isGridSolved: currentSession?.status === "won",
     isGameIsOver: currentSession?.status === "lost",

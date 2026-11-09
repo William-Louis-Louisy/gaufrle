@@ -30,7 +30,7 @@ function HardGamepage() {
 
   const {
     isReady,
-    minMoves,
+    victoryScore,
     remainingMoves,
     correctGrid,
     gridLetters,
@@ -66,12 +66,8 @@ function HardGamepage() {
           <span className="text-xl font-bold ml-1">{remainingMoves}</span>
         </span>
 
-        {isGridSolved && (
-          <Victory
-            minMoves={minMoves}
-            weekly={true}
-            remainingMoves={remainingMoves}
-          />
+        {isGridSolved && victoryScore && (
+          <Victory score={victoryScore} weekly />
         )}
 
         {todayGrid && isGameIsOver && (
