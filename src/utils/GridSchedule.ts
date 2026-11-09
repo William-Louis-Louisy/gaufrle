@@ -51,8 +51,11 @@ export function addUtcDays(date: string, days: number): string {
 
 /**
  * The published date identifies a period, not the puzzle itself.
- * Normal/medium keep the original date catalog; hard always cycles through
- * the FIRST 130 puzzles in the published order, starting 2025-03-10.
+ * Normal/medium keep the original date catalog; hard cycles through the
+ * FIRST 130 entries in their published order, starting 2025-03-10.
+ * Data warning: these 130 entries contain only 65 unique puzzles (the second
+ * half duplicates the first). Keep the requested 130-week schedule unchanged
+ * until the content catalog is explicitly expanded or revised.
  */
 export function selectScheduledGrid(
   mode: GameMode,

@@ -15,9 +15,15 @@ const normalGrids: IGridData[] = require("../jsons/NormalGridList.json");
 const mediumGrids: IGridData[] = require("../jsons/MediumGridList.json");
 
 describe("the 130-week difficult puzzle cycle", () => {
-  test("uses the existing 130 puzzles in their original order", () => {
+  test("keeps all 130 scheduled entries without silently claiming 130 unique puzzles", () => {
     expect(hardGrids).toHaveLength(HARD_CYCLE_LENGTH);
-    expect(new Set(hardGrids.map((grid) => grid.id)).size).toBe(HARD_CYCLE_LENGTH);
+    // Known content issue: entries 66–130 reuse exactly the 65 first puzzles.
+    expect(new Set(hardGrids.map((grid) => grid.id)).size).toBe(65);
+    expect(new Set(hardGrids.map((grid) => JSON.stringify(grid.words))).size).toBe(65);
+    for (let index = 0; index < 65; index += 1) {
+      expect(hardGrids[index + 65].id).toBe(hardGrids[index].id);
+      expect(hardGrids[index + 65].words).toEqual(hardGrids[index].words);
+    }
     expect(hardGrids[0].date).toBe(HARD_FIRST_WEEK);
 
     const first = selectScheduledGrid("hard", hardGrids, "2025-03-10");
@@ -31,6 +37,17 @@ describe("the 130-week difficult puzzle cycle", () => {
     expect(second.grid).toBe(hardGrids[1]);
     expect(last.periodStart).toBe("2027-08-30");
     expect(restarted.periodStart).toBe("2027-09-06");
+  });
+
+  test("never shows the same puzzle in two consecutive weeks", () => {
+    for (let week = 0; week <= HARD_CYCLE_LENGTH; week += 1) {
+      const today = addUtcDays(HARD_FIRST_WEEK, week * 7);
+      const next = addUtcDays(today, 7);
+      const currentGrid = selectScheduledGrid("hard", hardGrids, today).grid;
+      const followingGrid = selectScheduledGrid("hard", hardGrids, next).grid;
+      expect(currentGrid?.id).toBeDefined();
+      expect(currentGrid?.id).not.toBe(followingGrid?.id);
+    }
   });
 
   test("keeps the same weekly puzzle from Monday through Sunday", () => {
