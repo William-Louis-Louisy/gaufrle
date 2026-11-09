@@ -17,9 +17,9 @@ import {
 import { calculateVictoryScore } from "./Scoring";
 
 const fixtures: Record<GameMode, IGridData> = {
-  normal: normalCatalog[0],
-  medium: mediumCatalog[4],
-  hard: hardCatalog[0],
+  normal: (normalCatalog as IGridData[])[0],
+  medium: (mediumCatalog as IGridData[])[4],
+  hard: (hardCatalog as IGridData[])[0],
 };
 
 type Cell = { row: number; col: number };
