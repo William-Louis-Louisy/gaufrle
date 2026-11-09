@@ -19,10 +19,10 @@
   },
   "scripts": {
     "dev": "vite",
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "vite",
+    "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
-    "test": "react-scripts test",
+    "test": "vitest run",
     "test:watch": "vitest",
     "validate:grids": "node scripts/validate-grid-calendar.cjs",
     "test:calendar": "node --test scripts/grid-calendar.test.cjs"
