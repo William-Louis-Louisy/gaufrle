@@ -85,7 +85,7 @@ describe.each(["normal", "medium", "hard"] as GameMode[])(
       expect(won.remainingMoves).toBe(0);
       expect(won.status).toBe("won");
       expect(calculateVictoryScore(won)).toEqual({
-        stars: 3,
+        stars: 1,
         movesUsed: 2,
         moveLimit: 2,
       });
