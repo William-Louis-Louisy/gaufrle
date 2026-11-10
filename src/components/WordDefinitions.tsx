@@ -1,38 +1,10 @@
 import { useEffect, useState } from "react";
 
-type WordDefinition = {
-  word: string;
-  definition: string[];
-};
+import { loadDefinitions, type WordDefinition } from "../utils/WordDefinitionsRepository";
 
 type WordDefinitionsProps = {
   words: string[];
 };
-
-/**
- * Definitions are large dictionaries. Load each dictionary only after a
- * completed game needs it, and only for word lengths present in that puzzle.
- */
-async function loadDefinitions(words: string[]): Promise<WordDefinition[]> {
-  const needsFive = words.some((word) => word.length === 5);
-  const needsSeven = words.some((word) => word.length === 7);
-
-  const [five, seven] = await Promise.all([
-    needsFive
-      ? import("../jsons/DefFiveLetters.json").then((module) => module.default as WordDefinition[])
-      : Promise.resolve([] as WordDefinition[]),
-    needsSeven
-      ? import("../jsons/DefSevenLetters.json").then((module) => module.default as WordDefinition[])
-      : Promise.resolve([] as WordDefinition[]),
-  ]);
-
-  // Preserve the original puzzle word order and skip missing definitions.
-  const byFive = new Map(five.map((entry) => [entry.word, entry]));
-  const bySeven = new Map(seven.map((entry) => [entry.word, entry]));
-  return words
-    .map((word) => (word.length === 5 ? byFive : bySeven).get(word))
-    .filter((entry): entry is WordDefinition => entry !== undefined);
-}
 
 function WordDefinitions({ words }: WordDefinitionsProps) {
   const [definitions, setDefinitions] = useState<WordDefinition[]>([]);
