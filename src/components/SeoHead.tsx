@@ -54,6 +54,7 @@ export default function SeoHead() {
     setMeta('meta[property="og:image"]', "property", "og:image", SOCIAL_IMAGE);
 
     setMeta('meta[name="twitter:card"]', "name", "twitter:card", "summary_large_image");
+    setMeta('meta[name="twitter:url"]', "name", "twitter:url", page?.url ?? window.location.href);
     setMeta('meta[name="twitter:title"]', "name", "twitter:title", document.title);
     setMeta('meta[name="twitter:description"]', "name", "twitter:description",
       page?.description ?? "Page introuvable | Gaufrle");
