@@ -7,15 +7,18 @@ const APP_SHELL = [
   "/index.html", "/manifest.json", "/favicon.ico",
   "/pwa-192.png", "/pwa-512.png",
 ];
-const DEFERRED_DICTIONARIES = /^Def(?:Five|Seven)Letters-/;
 
 function collectPrecacheUrls(dist = DIST) {
   const assets = fs.readdirSync(path.join(dist, "assets"))
     .filter((name) => /\.(?:js|css)$/.test(name))
-    .filter((name) => !DEFERRED_DICTIONARIES.test(name))
     .sort()
     .map((name) => "/assets/" + name);
-  return [...APP_SHELL, ...assets];
+  const imagesDirectory = path.join(dist, "images");
+  const images = fs.readdirSync(imagesDirectory)
+    .filter((name) => /\.webp$/.test(name))
+    .sort()
+    .map((name) => "/images/" + name);
+  return [...APP_SHELL, ...assets, ...images];
 }
 
 const WORKER_SOURCE = String.raw`/* Generated during the Vite build. Do not edit dist/sw.js. */
