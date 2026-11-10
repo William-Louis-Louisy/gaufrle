@@ -1,4 +1,4 @@
-import { CtaHomeProps } from "../components/CtaHome";
+import type { CtaHomeProps } from "../types/CtaHome";
 
 export const CTA: CtaHomeProps[] = [
   {
