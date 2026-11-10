@@ -1,5 +1,22 @@
 export const UPDATES = [
   {
+    releaseDate: "10-11-2026",
+    version: "1.2.1",
+    title: "Gaufrle s'installe et joue hors ligne",
+    features: [
+      {
+        title: "Installez Gaufrle",
+        description:
+          "Ajoutez le jeu à votre écran d'accueil sur les appareils et navigateurs compatibles.",
+      },
+      {
+        title: "Continuez à jouer sans connexion",
+        description:
+          "Après un premier chargement en ligne, les trois difficultés et leurs grilles sont accessibles hors ligne. Les définitions nécessitent un premier téléchargement.",
+      },
+    ],
+  },
+  {
     releaseDate: "09-11-2026",
     version: "1.2.0",
     title: "Gaufrle modernisé",
