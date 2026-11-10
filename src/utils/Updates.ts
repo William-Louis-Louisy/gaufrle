@@ -12,7 +12,7 @@ export const UPDATES = [
       {
         title: "Continuez à jouer sans connexion",
         description:
-          "Après un premier chargement en ligne, les trois difficultés et leurs grilles sont accessibles hors ligne. Les définitions nécessitent un premier téléchargement.",
+          "Après la préparation initiale du jeu en ligne, les trois difficultés, leurs définitions et les illustrations essentielles fonctionnent même sans connexion.",
       },
     ],
   },
