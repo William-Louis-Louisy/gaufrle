@@ -1,7 +1,8 @@
 import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
-const css = readFileSync(new URL("./global.css", import.meta.url), "utf8");
+const css = readFileSync(resolve(process.cwd(), "src/styles/global.css"), "utf8");
 const DARK_TEXT = "#232629";
 const LIGHT_TEXT = "#FBFBF2";
 const MINIMUM_WCAG_AA = 4.5;
