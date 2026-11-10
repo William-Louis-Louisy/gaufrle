@@ -1,6 +1,7 @@
 import React from "react";
 import { useLocation } from "react-router";
 import DarkModeToggle from "../DarkModeToggle";
+import { GAME_NAVIGATION } from "../../utils/GameNavigation";
 import { FaCircleQuestion } from "react-icons/fa6";
 
 function Menu({
@@ -15,32 +16,10 @@ function Menu({
   const location = useLocation();
   const pathname = location.pathname;
 
-  const navigation = [
-    {
-      name: "Gaufrette",
-      href: "/normal-game",
-      current: pathname === "/normal-game",
-      imgSrc:
-        "/images/normal.webp",
-      imgAlt: "Médaille de bronze",
-    },
-    {
-      name: "Gauf' au suc'",
-      href: "/medium-game",
-      current: pathname === "/medium-game",
-      imgSrc:
-        "/images/medium.webp",
-      imgAlt: "Médaille d'argent",
-    },
-    {
-      name: "Gaufre salée",
-      href: "/hard-game",
-      current: pathname === "/hard-game",
-      imgSrc:
-        "/images/hard.webp",
-      imgAlt: "Médaille d'or",
-    },
-  ];
+  const navigation = GAME_NAVIGATION.map((item) => ({
+    ...item,
+    current: pathname === item.href,
+  }));
 
   // Handle HowToPlayModal visibility
   const handleModal = () => {
