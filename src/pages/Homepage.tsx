@@ -18,9 +18,9 @@ function Homepage() {
         />
       </div>
 
-      <h2 className="text-3xl text-center uppercase theme-text-accent">
+      <h1 className="text-3xl text-center uppercase theme-text-accent">
         Transformez le chaos en mots !
-      </h2>
+      </h1>
 
       <h3 className="text-lg md:text-xl">
         Découvrez le jeu quotidien qui mettra votre vocabulaire à l'épreuve.
