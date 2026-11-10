@@ -1,55 +1,30 @@
 {
-  "short_name": "Gaufrle",
+  "id": "/",
   "name": "Gaufrle",
+  "short_name": "Gaufrle",
+  "description": "Gaufrle, le jeu de lettres quotidien à trois niveaux de difficulté.",
+  "lang": "fr",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#FBFBF2",
+  "theme_color": "#856C1E",
+  "categories": [
+    "games",
+    "entertainment"
+  ],
   "icons": [
     {
-      "src": "/apple-touch-icon-57x57.png",
-      "sizes": "57x57",
-      "type": "image/png"
+      "src": "/pwa-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
-      "src": "/apple-touch-icon-60x60.png",
-      "sizes": "60x60",
-      "type": "image/png"
-    },
-    {
-      "src": "/apple-touch-icon-72x72.png",
-      "sizes": "72x72",
-      "type": "image/png"
-    },
-    {
-      "src": "/apple-touch-icon-76x76.png",
-      "sizes": "76x76",
-      "type": "image/png"
-    },
-    {
-      "src": "/apple-touch-icon-114x114.png",
-      "sizes": "114x114",
-      "type": "image/png"
-    },
-    {
-      "src": "/apple-touch-icon-120x120.png",
-      "sizes": "120x120",
-      "type": "image/png"
-    },
-    {
-      "src": "/apple-touch-icon-152x152.png",
-      "sizes": "152x152",
-      "type": "image/png"
-    },
-    {
-      "src": "/favicon-196x196.png",
-      "sizes": "196x196",
-      "type": "image/png"
-    },
-    {
-      "src": "/favicon.ico",
-      "sizes": "64x64 32x32 24x24 16x16",
-      "type": "image/x-icon"
+      "src": "/pwa-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
     }
-  ],
-  "theme_color": "#856C1E",
-  "background_color": "#FBFBF2",
-  "start_url": "/",
-  "display": "standalone"
+  ]
 }
