@@ -23,6 +23,7 @@ jobs:
       - run: python -m pip install --quiet pillow
       - name: Download, validate and optimize all UI images
         run: |
+          python - <<'PY'
           from pathlib import Path
           from io import BytesIO
           from urllib.request import Request, urlopen
@@ -51,6 +52,7 @@ jobs:
                   image.save(output / filename, "WEBP", quality=82, method=6)
               assert (output / filename).stat().st_size > 1000, filename
               print(f"{filename}: {(output / filename).stat().st_size} bytes")
+          PY
           
       - name: Commit self-hosted image assets
         run: |
