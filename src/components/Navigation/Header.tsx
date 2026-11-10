@@ -1,4 +1,5 @@
 import DarkModeToggle from "../DarkModeToggle";
+import InstallApp from "../InstallApp";
 import { Dispatch, SetStateAction } from "react";
 import { FaCircleQuestion, FaBars } from "react-icons/fa6";
 import { Link, useLocation } from "react-router-dom";
@@ -72,6 +73,7 @@ function Header({ setModal, isMenuOpen, setIsMenuOpen }: HeaderProps) {
         </button>
       </div>
 
+      <InstallApp />
       <button
         type="button"
         aria-label={isMenuOpen ? "Fermer le menu" : "Ouvrir le menu"}
