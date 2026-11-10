@@ -36,28 +36,30 @@ function renderDocument(template, page, content, structuredData, socialImage) {
   const { document } = dom.window;
   document.title = page.title;
   setMeta(document, "name", "description", page.description);
-  setMeta(document, "name", "robots", "index,follow");
-  setLink(document, "canonical", page.url);
+  setMeta(document, "name", "robots", page.url ? "index,follow" : "noindex,follow");
+  if (page.url) setLink(document, "canonical", page.url);
   setMeta(document, "property", "og:title", page.title);
   setMeta(document, "property", "og:description", page.description);
-  setMeta(document, "property", "og:url", page.url);
+  if (page.url) setMeta(document, "property", "og:url", page.url);
   setMeta(document, "property", "og:site_name", "Gaufrle");
   setMeta(document, "property", "og:locale", "fr_FR");
   setMeta(document, "property", "og:type", "website");
   setMeta(document, "property", "og:image", socialImage);
   setMeta(document, "name", "twitter:title", page.title);
   setMeta(document, "name", "twitter:description", page.description);
-  setMeta(document, "name", "twitter:url", page.url);
+  if (page.url) setMeta(document, "name", "twitter:url", page.url);
   setMeta(document, "name", "twitter:image", socialImage);
   setMeta(document, "name", "twitter:card", "summary_large_image");
 
   const existingData = document.head.querySelectorAll('script[type="application/ld+json"]');
   existingData.forEach((node) => node.remove());
-  const script = document.createElement("script");
-  script.id = "gaufrle-structured-data";
-  script.type = "application/ld+json";
-  script.textContent = JSON.stringify(structuredData).replace(/</g, "\\u003c");
-  document.head.appendChild(script);
+  if (structuredData) {
+    const script = document.createElement("script");
+    script.id = "gaufrle-structured-data";
+    script.type = "application/ld+json";
+    script.textContent = JSON.stringify(structuredData).replace(/</g, "\\u003c");
+    document.head.appendChild(script);
+  }
 
   const root = document.getElementById("root");
   if (!root) throw new Error("Missing #root in built HTML");
@@ -87,6 +89,8 @@ async function prerender(dist = DIST) {
       await server.ssrLoadModule("/src/pages/Supportpage.tsx");
     const { default: Loading } =
       await server.ssrLoadModule("/src/components/Navigation/Loading.tsx");
+    const { default: Errorpage } =
+      await server.ssrLoadModule("/src/pages/Errorpage.tsx");
 
     // Use the original built document, including Vite's fingerprinted assets.
     const template = fs.readFileSync(path.join(dist, "index.html"), "utf8");
@@ -123,6 +127,23 @@ async function prerender(dist = DIST) {
       fs.writeFileSync(target, html, "utf8");
       console.log("Prerendered " + page.pathname + " -> " + path.relative(dist, target));
     }
+
+    // Unknown paths must not inherit the homepage SEO metadata or HTTP 200.
+    // Vercel serves this as its static 404 response when no rewrite matches.
+    const notFoundPage = {
+      pathname: "/404",
+      title: "Page introuvable | Gaufrle",
+      description: "Cette page n'existe pas sur Gaufrle.",
+      url: null,
+    };
+    const notFoundMarkup = renderToStaticMarkup(
+      React.createElement("main", { className: "main-view" }, React.createElement(Errorpage))
+    );
+    const notFoundHtml = renderDocument(
+      template, notFoundPage, notFoundMarkup, null, SOCIAL_IMAGE
+    );
+    fs.writeFileSync(path.join(dist, "404.html"), notFoundHtml, "utf8");
+    console.log("Prerendered /404.html (noindex)");
   } finally {
     await server.close();
   }
