@@ -41,6 +41,7 @@ function renderDocument(template, page, content, structuredData, socialImage) {
   setMeta(document, "property", "og:title", page.title);
   setMeta(document, "property", "og:description", page.description);
   if (page.url) setMeta(document, "property", "og:url", page.url);
+  else document.head.querySelectorAll('meta[property="og:url"]').forEach((node) => node.remove());
   setMeta(document, "property", "og:site_name", "Gaufrle");
   setMeta(document, "property", "og:locale", "fr_FR");
   setMeta(document, "property", "og:type", "website");
@@ -48,6 +49,7 @@ function renderDocument(template, page, content, structuredData, socialImage) {
   setMeta(document, "name", "twitter:title", page.title);
   setMeta(document, "name", "twitter:description", page.description);
   if (page.url) setMeta(document, "name", "twitter:url", page.url);
+  else document.head.querySelectorAll('meta[name="twitter:url"]').forEach((node) => node.remove());
   setMeta(document, "name", "twitter:image", socialImage);
   setMeta(document, "name", "twitter:card", "summary_large_image");
 
