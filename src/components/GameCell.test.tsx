@@ -1,12 +1,13 @@
+import type { Mock } from "vitest";
 import { render } from "@testing-library/react";
 import { useDrag, useDrop } from "react-dnd";
 import GameCell from "./GameCell";
 import GameGrid from "./GameGrid";
 import { IGameCell } from "../types/GameCell";
 
-jest.mock("react-dnd", () => ({
-  useDrag: jest.fn(() => [{ isDragging: false }, () => undefined]),
-  useDrop: jest.fn(() => [{}, () => undefined]),
+vi.mock("react-dnd", () => ({
+  useDrag: vi.fn(() => [{ isDragging: false }, () => undefined]),
+  useDrop: vi.fn(() => [{}, () => undefined]),
 }));
 
 type DragItem = { row: number; col: number };
@@ -17,13 +18,13 @@ type DropSpec = {
 };
 
 const getDragSpec = (): DragSpec =>
-  (useDrag as jest.Mock).mock.calls[0][0] as DragSpec;
+  (useDrag as Mock).mock.calls[0][0] as DragSpec;
 const getDropSpec = (): DropSpec =>
-  (useDrop as jest.Mock).mock.calls[0][0] as DropSpec;
+  (useDrop as Mock).mock.calls[0][0] as DropSpec;
 
 function renderCell(overrides: Partial<IGameCell> = {}) {
-  const onMove = jest.fn();
-  const canCellMove = jest.fn(() => true);
+  const onMove = vi.fn();
+  const canCellMove = vi.fn(() => true);
   const props: IGameCell = {
     row: 0,
     col: 0,
@@ -41,19 +42,19 @@ function renderCell(overrides: Partial<IGameCell> = {}) {
   const view = render(<GameCell {...props} />);
   return {
     ...view,
-    onMove: props.onMove as jest.Mock,
-    canCellMove: props.canCellMove as jest.Mock,
+    onMove: props.onMove as Mock,
+    canCellMove: props.canCellMove as Mock,
   };
 }
 
 describe("P0.4 drag-and-drop validation", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     // CRA/Jest resets mock implementations between tests; re-install them.
-    (useDrag as jest.Mock).mockImplementation(
+    (useDrag as Mock).mockImplementation(
       () => [{ isDragging: false }, () => undefined]
     );
-    (useDrop as jest.Mock).mockImplementation(
+    (useDrop as Mock).mockImplementation(
       () => [{}, () => undefined]
     );
   });
@@ -79,7 +80,7 @@ describe("P0.4 drag-and-drop validation", () => {
 
   test("asks the authoritative move validator before allowing a drop", () => {
     const { onMove, canCellMove } = renderCell({
-      canCellMove: jest.fn(() => false),
+      canCellMove: vi.fn(() => false),
     });
     const target = { row: 0, col: 2 };
 
@@ -92,8 +93,8 @@ describe("P0.4 drag-and-drop validation", () => {
   });
 
   test("only dispatches an approved swap with the exact cell coordinates", () => {
-    const onMove = jest.fn();
-    const canCellMove = jest.fn(() => true);
+    const onMove = vi.fn();
+    const canCellMove = vi.fn(() => true);
     renderCell({ row: 2, col: 3, onMove, canCellMove });
     const source = { row: 0, col: 4 };
 
@@ -111,8 +112,8 @@ describe("P0.4 drag-and-drop validation", () => {
       <GameGrid
         letters={[["a", "b"]]}
         cellStatus={[["default", "default"]]}
-        onCellMove={jest.fn()}
-        canCellMove={jest.fn(() => true)}
+        onCellMove={vi.fn()}
+        canCellMove={vi.fn(() => true)}
         nonPlayableCells={[]}
         indexValue={2}
         isGridSolved={false}
@@ -120,7 +121,7 @@ describe("P0.4 drag-and-drop validation", () => {
       />
     );
 
-    const options = (useDrag as jest.Mock).mock.calls.map(
+    const options = (useDrag as Mock).mock.calls.map(
       (call) => call[0] as DragSpec
     );
     expect(options).toHaveLength(2);

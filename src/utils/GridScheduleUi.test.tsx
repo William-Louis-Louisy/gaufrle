@@ -10,42 +10,42 @@ function DateProbe() {
 
 describe("live Europe/Paris publication day", () => {
   beforeEach(() => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
   });
 
   afterEach(() => {
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   test("refreshes the date automatically at Paris midnight without reloading", () => {
-    jest.setSystemTime(new Date("2027-09-05T21:59:59.000Z"));
+    vi.setSystemTime(new Date("2027-09-05T21:59:59.000Z"));
     render(<DateProbe />);
 
     expect(screen.getByTestId("publication-date").textContent).toBe("2027-09-05");
     act(() => {
-      jest.advanceTimersByTime(1100);
+      vi.advanceTimersByTime(1100);
     });
     expect(screen.getByTestId("publication-date").textContent).toBe("2027-09-06");
   });
 
   test("refreshes at winter midnight 23:00 UTC, not midnight UTC", () => {
-    jest.setSystemTime(new Date("2026-11-09T22:59:59.000Z"));
+    vi.setSystemTime(new Date("2026-11-09T22:59:59.000Z"));
     render(<DateProbe />);
 
     expect(screen.getByTestId("publication-date").textContent).toBe("2026-11-09");
     act(() => {
-      jest.advanceTimersByTime(1100);
+      vi.advanceTimersByTime(1100);
     });
     expect(screen.getByTestId("publication-date").textContent).toBe("2026-11-10");
   });
 
   test("refreshes after the page regains focus from a suspended tab", () => {
-    jest.setSystemTime(new Date("2027-09-05T15:00:00.000Z"));
+    vi.setSystemTime(new Date("2027-09-05T15:00:00.000Z"));
     render(<DateProbe />);
     expect(screen.getByTestId("publication-date").textContent).toBe("2027-09-05");
 
     act(() => {
-      jest.setSystemTime(new Date("2027-09-06T10:00:00.000Z"));
+      vi.setSystemTime(new Date("2027-09-06T10:00:00.000Z"));
       fireEvent.focus(window);
     });
     expect(screen.getByTestId("publication-date").textContent).toBe("2027-09-06");

@@ -1,3 +1,6 @@
+import hardCatalog from "../jsons/HardGridList.json";
+import mediumCatalog from "../jsons/MediumGridList.json";
+import normalCatalog from "../jsons/NormalGridList.json";
 import {
   PUBLICATION_TIME_ZONE,
   getPublicationDate,
@@ -6,9 +9,9 @@ import {
 import { getNextGridChange, getSecondsUntilNextGrid, selectScheduledGrid } from "./GridSchedule";
 import { IGridData } from "../types/GameGrid";
 
-const hardGrids: IGridData[] = require("../jsons/HardGridList.json");
-const normalGrids: IGridData[] = require("../jsons/NormalGridList.json");
-const mediumGrids: IGridData[] = require("../jsons/MediumGridList.json");
+const hardGrids: IGridData[] = hardCatalog as IGridData[];
+const normalGrids: IGridData[] = normalCatalog as IGridData[];
+const mediumGrids: IGridData[] = mediumCatalog as IGridData[];
 
 describe("publication clock is always Europe/Paris", () => {
   test("explicitly uses the IANA time zone, not the visitor's locale", () => {

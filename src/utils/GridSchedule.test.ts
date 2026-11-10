@@ -1,3 +1,6 @@
+import hardCatalog from "../jsons/HardGridList.json";
+import mediumCatalog from "../jsons/MediumGridList.json";
+import normalCatalog from "../jsons/NormalGridList.json";
 import type { IGridData } from "../types/GameGrid";
 import { createGameIdentity, sameGameIdentity } from "./GameSession";
 import {
@@ -11,9 +14,9 @@ import {
   selectScheduledGrid,
 } from "./GridSchedule";
 
-const hardGrids: IGridData[] = require("../jsons/HardGridList.json");
-const normalGrids: IGridData[] = require("../jsons/NormalGridList.json");
-const mediumGrids: IGridData[] = require("../jsons/MediumGridList.json");
+const hardGrids: IGridData[] = hardCatalog as IGridData[];
+const normalGrids: IGridData[] = normalCatalog as IGridData[];
+const mediumGrids: IGridData[] = mediumCatalog as IGridData[];
 
 describe("the 130-week difficult puzzle cycle", () => {
   test("keeps all 130 scheduled entries without silently claiming 130 unique puzzles", () => {

@@ -1,3 +1,4 @@
+import mediumCatalog from "../jsons/MediumGridList.json";
 import { DndProvider } from "react-dnd";
 import Victory from "../components/Victory";
 import GameGrid from "../components/GameGrid";
@@ -17,7 +18,7 @@ import { gridMetadata } from "../utils/CellStatus";
 
 function MediumGamepage() {
   const publicationDate = usePublicationDate();
-  const grids: IGridData[] = require("../jsons/MediumGridList.json");
+  const grids: IGridData[] = mediumCatalog as IGridData[];
   const { grid: todayGrid, periodStart } = selectScheduledGrid(
     "medium",
     grids,

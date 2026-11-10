@@ -1,3 +1,4 @@
+import hardCatalog from "../jsons/HardGridList.json";
 import { DndProvider } from "react-dnd";
 import Victory from "../components/Victory";
 import GameGrid from "../components/GameGrid";
@@ -17,7 +18,7 @@ import { gridMetadata } from "../utils/CellStatus";
 
 function HardGamepage() {
   const publicationDate = usePublicationDate();
-  const grids: IGridData[] = require("../jsons/HardGridList.json");
+  const grids: IGridData[] = hardCatalog as IGridData[];
   const { grid: todayGrid, periodStart } = selectScheduledGrid(
     "hard",
     grids,

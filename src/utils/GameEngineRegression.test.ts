@@ -1,3 +1,6 @@
+import hardCatalog from "../jsons/HardGridList.json";
+import mediumCatalog from "../jsons/MediumGridList.json";
+import normalCatalog from "../jsons/NormalGridList.json";
 import type { IGridData } from "../types/GameGrid";
 import { calculateCellStatus, checkIfGridIsSolved, gridMetadata } from "./CellStatus";
 import {
@@ -14,9 +17,9 @@ import {
 import { calculateVictoryScore } from "./Scoring";
 
 const fixtures: Record<GameMode, IGridData> = {
-  normal: require("../jsons/NormalGridList.json")[0],
-  medium: require("../jsons/MediumGridList.json")[4],
-  hard: require("../jsons/HardGridList.json")[0],
+  normal: (normalCatalog as IGridData[])[0],
+  medium: (mediumCatalog as IGridData[])[4],
+  hard: (hardCatalog as IGridData[])[0],
 };
 
 type Cell = { row: number; col: number };

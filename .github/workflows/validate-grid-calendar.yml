@@ -49,7 +49,7 @@ jobs:
       - name: Test game sessions and UI
         env:
           CI: 'true'
-        run: npm test -- --watch=false --runInBand
+        run: npm test
       - name: Production build
         env:
           CI: 'true'
