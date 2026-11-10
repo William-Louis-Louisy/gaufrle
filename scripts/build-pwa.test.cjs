@@ -29,6 +29,7 @@ function fixture() {
     "images/banner.webp", "images/defeat.webp", "images/hard.webp",
     "images/mascot.webp", "images/medium.webp", "images/normal.webp", "images/victory.webp",
   ]) {
+    fs.mkdirSync(path.dirname(path.join(dist, file)), { recursive: true });
     fs.writeFileSync(path.join(dist, file), file);
   }
   return dist;
