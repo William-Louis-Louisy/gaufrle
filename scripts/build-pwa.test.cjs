@@ -24,7 +24,8 @@ function fixture() {
     "assets/index-a.js", "assets/index-b.css",
     "assets/NormalGamepage-c.js", "assets/HardGamepage-d.js",
     "assets/DefFiveLetters-big.js", "assets/DefSevenLetters-bigger.js",
-    "images/banner.webp", "images/mascot.webp", "images/victory.webp",
+    "images/banner.webp", "images/defeat.webp", "images/hard.webp",
+    "images/mascot.webp", "images/medium.webp", "images/normal.webp", "images/victory.webp",
   ]) {
     fs.writeFileSync(path.join(dist, file), file);
   }
@@ -45,6 +46,7 @@ test("precache contains the game routes, both dictionaries and all UI images", (
   assert.ok(urls.includes("/images/banner.webp"));
   assert.ok(urls.includes("/images/mascot.webp"));
   assert.ok(urls.includes("/images/victory.webp"));
+  assert.equal(urls.filter((url) => url.startsWith("/images/")).length, 7);
 });
 
 test("worker uses versioned caches and provides an offline SPA navigation fallback", () => {
@@ -73,4 +75,11 @@ test("build fails when a required install icon is missing", () => {
   const dist = fixture();
   fs.rmSync(path.join(dist, "pwa-512.png"));
   assert.throws(() => buildServiceWorker(dist), /Missing offline asset: \/pwa-512.png/);
+});
+
+
+test("build fails when a required local illustration is missing", () => {
+  const dist = fixture();
+  fs.rmSync(path.join(dist, "images/defeat.webp"));
+  assert.throws(() => buildServiceWorker(dist), /Missing offline asset: \/images\/defeat.webp/);
 });
