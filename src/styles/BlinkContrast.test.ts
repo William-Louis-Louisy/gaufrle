@@ -72,8 +72,7 @@ describe("accessible victory celebration", () => {
   });
 
   it("preserves the infinite celebration loop, themed animation and reduced motion", () => {
-    expect(css).toMatch(/animation:\s*blink 2\.4s ease-in-out 2;/);
-    expect(css).not.toMatch(/animation:\s*blink [^;]*infinite/);
+    expect(css).toMatch(/animation:\s*blink 2\.4s ease-in-out infinite;/);
     expect(css).toMatch(/\.dark \.blink-cell\s*\{\s*animation-name:\s*blink-dark;/);
     expect(css).toMatch(/prefers-reduced-motion:\s*reduce[\s\S]*?\.blink-cell[\s\S]*?animation:\s*none !important;/);
   });
