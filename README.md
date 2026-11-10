@@ -30,7 +30,7 @@ Le build statique est produit dans `dist/`. Vercel doit utiliser **Framework Pre
 
 Après un premier chargement **en ligne**, la version de production installe un service worker et télécharge une copie locale des trois modes, des dictionnaires et des visuels de l'interface. Le build crée `dist/sw.js`, qui n'est pas utilisé par `npm run dev`. Les parties continuent à être sauvegardées dans le navigateur comme auparavant.
 
-La commande **« Installer Gaufrle »** ouvre la demande native lorsque Chromium autorise l'événement `beforeinstallprompt`. Si le navigateur ne le fournit pas, le site affiche **« Comment installer ? »** et des instructions adaptées ; Chrome n'affiche pas systématiquement une invite d'installation spontanée. Sur iOS, l'installation passe par le menu Partager de Safari.
+L’installation reste entièrement gérée par le navigateur ou le système d’exploitation, sans commande ajoutée dans l’interface de Gaufrle. Chrome ne propose pas systématiquement l’installation spontanément. Sur iOS, l’ajout à l’écran d’accueil passe par Safari.
 
 Test manuel recommandé :
 
