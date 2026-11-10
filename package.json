@@ -17,13 +17,14 @@
   "scripts": {
     "dev": "vite",
     "start": "vite",
-    "build": "tsc --noEmit && vite build && node scripts/build-pwa.cjs",
+    "build": "tsc --noEmit && vite build && node scripts/prerender.cjs && node scripts/build-pwa.cjs",
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
     "validate:grids": "node scripts/validate-grid-calendar.cjs",
     "test:calendar": "node --test scripts/grid-calendar.test.cjs",
-    "test:pwa": "node --test scripts/build-pwa.test.cjs"
+    "test:pwa": "node --test scripts/build-pwa.test.cjs",
+    "test:prerender": "node --test scripts/prerender.test.cjs"
   },
   "browserslist": {
     "production": [

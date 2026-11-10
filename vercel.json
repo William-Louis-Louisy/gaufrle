@@ -5,8 +5,20 @@
   "outputDirectory": "dist",
   "rewrites": [
     {
-      "source": "/(.*)",
-      "destination": "/index.html"
+      "source": "/normal-game",
+      "destination": "/normal-game/index.html"
+    },
+    {
+      "source": "/medium-game",
+      "destination": "/medium-game/index.html"
+    },
+    {
+      "source": "/hard-game",
+      "destination": "/hard-game/index.html"
+    },
+    {
+      "source": "/support",
+      "destination": "/support/index.html"
     }
   ]
 }

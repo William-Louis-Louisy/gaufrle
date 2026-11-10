@@ -50,6 +50,8 @@ jobs:
         env:
           CI: 'true'
         run: npm test
+      - name: Static prerender HTML tests
+        run: npm run test:prerender
       - name: PWA cache generation tests
         run: npm run test:pwa
       - name: Production build
