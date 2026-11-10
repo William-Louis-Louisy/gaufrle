@@ -3,9 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@headlessui/react": "^1.7.17",
     "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
     "@types/react": "^18.2.22",
     "@types/react-dom": "^18.2.7",
     "react": "^18.2.0",
@@ -14,8 +12,7 @@
     "react-dnd-touch-backend": "^16.0.1",
     "react-dom": "^18.2.0",
     "react-icons": "^4.11.0",
-    "react-router-dom": "^6.16.0",
-    "web-vitals": "^2.1.4"
+    "react-router-dom": "^6.16.0"
   },
   "scripts": {
     "dev": "vite",
@@ -42,17 +39,17 @@
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.6",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@types/node": "^20.17.0",
+    "@vitejs/plugin-react": "^4.3.4",
     "autoprefixer": "^10.4.16",
+    "jsdom": "^25.0.1",
     "postcss": "^8.4.30",
     "prettier": "^3.0.3",
     "prettier-plugin-tailwindcss": "^0.5.4",
     "tailwindcss": "^3.3.3",
-    "@vitejs/plugin-react": "^4.3.4",
+    "typescript": "^5.6.3",
     "vite": "^5.4.21",
-    "vitest": "^2.1.9",
-    "jsdom": "^25.0.1",
-    "@testing-library/jest-dom": "^6.6.3",
-    "@types/node": "^20.17.0",
-    "typescript": "^5.6.3"
+    "vitest": "^2.1.9"
   }
 }

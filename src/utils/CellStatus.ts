@@ -148,16 +148,6 @@ export const calculateCellStatus = (
   return newCellStatus;
 };
 
-// Backwards-compatible setter wrapper. New game sessions use the pure function.
-export const verifyCellStatus = (
-  newGridLetters: string[][],
-  setCellStatus: (status: string[][]) => void,
-  correctGrid: string[][],
-  gridType: "normal" | "medium" | "hard"
-): void => {
-  setCellStatus(calculateCellStatus(newGridLetters, correctGrid, gridType));
-};
-
 // CHECK IF GRID IS SOLVED
 export const checkIfGridIsSolved = (
   currentGrid: string[][],
