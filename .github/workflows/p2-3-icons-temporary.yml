@@ -1,0 +1,49 @@
+name: P2.3 generate install icons (temporary)
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  icons:
+    if: github.head_ref == 'feat/p2-3-pwa-offline-install' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install image processor
+        run: python -m pip install --quiet pillow
+      - name: Generate real 192px and 512px brand icons
+        run: |
+          python - <<'PY'
+          from PIL import Image, ImageOps
+          from pathlib import Path
+          source = Image.open("public/favicon-196x196.png").convert("RGBA")
+          for size in [192, 512]:
+              background = Image.new("RGBA", (size, size), "#FBFBF2")
+              image = ImageOps.contain(source, (round(size * 0.74), round(size * 0.74)), Image.Resampling.LANCZOS)
+              background.alpha_composite(image, ((size - image.width) // 2, (size - image.height) // 2))
+              target = Path(f"public/pwa-{size}.png")
+              background.convert("RGB").save(target, optimize=True)
+              print(f"{target}: {Image.open(target).size}")
+          PY
+      - name: Commit generated assets on PR branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/pwa-192.png public/pwa-512.png
+          if git diff --cached --quiet; then
+            echo "Icons already generated"
+          else
+            git commit -m "assets(pwa): add 192px and 512px install icons"
+            git push origin HEAD:${{ github.head_ref }}
+          fi
