@@ -39,7 +39,7 @@ h3 {
 /*
  * Victory celebration: vivid but readable in both themes.
  * Light: dark text over pastels. Dark: light text over deep tones.
- * The animation repeats twice, then reveals the original green success cell.
+ * The celebration repeats continuously, as in the original game.
  */
 @keyframes blink {
   0%, 100% { background-color: #F0C96C; }
@@ -188,11 +188,10 @@ h3 {
 .blink-cell {
   @apply cell;
   /*
-   * The original .correct-cell green remains underneath the animation.
-   * A dark label also makes the resting green readable in dark mode.
+   * Dark labels preserve contrast against the original green when motion is reduced.
    */
   color: #232629;
-  animation: blink 2.4s ease-in-out 2;
+  animation: blink 2.4s ease-in-out infinite;
 }
 
 .dark .blink-cell {
