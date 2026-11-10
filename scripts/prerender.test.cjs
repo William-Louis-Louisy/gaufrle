@@ -64,3 +64,18 @@ test("prerender JSON-LD is script-safe and does not inject HTML", () => {
   assert.equal(JSON.parse(doc.querySelector('script[type="application/ld+json"]').textContent).description,
     "</script><script>bad()</script>");
 });
+
+test("unknown routes never expose canonical, indexable robots or structured data", () => {
+  const page = {
+    pathname: "/404", title: "Page introuvable | Gaufrle",
+    description: "Cette page n'existe pas sur Gaufrle.",
+    url: null,
+  };
+  const html = renderDocument(template, page, "<main><h1>404 Page non trouvée</h1></main>",
+    null, "https://gaufrle.vercel.app/image.png");
+  const doc = new JSDOM(html).window.document;
+  assert.equal(doc.querySelector('meta[name="robots"]').content, "noindex,follow");
+  assert.equal(doc.querySelector('link[rel="canonical"]'), null);
+  assert.equal(doc.querySelector('script[type="application/ld+json"]'), null);
+  assert.equal(doc.querySelector("main h1").textContent, "404 Page non trouvée");
+});
