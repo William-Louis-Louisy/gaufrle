@@ -71,7 +71,7 @@ describe("accessible victory celebration", () => {
     expect(css).toMatch(/\.blink-cell\s*\{[^}]*color:\s*#232629;/s);
   });
 
-  it("keeps the celebration finite, preserves staggered cells and reduced motion", () => {
+  it("preserves the infinite celebration loop, themed animation and reduced motion", () => {
     expect(css).toMatch(/animation:\s*blink 2\.4s ease-in-out 2;/);
     expect(css).not.toMatch(/animation:\s*blink [^;]*infinite/);
     expect(css).toMatch(/\.dark \.blink-cell\s*\{\s*animation-name:\s*blink-dark;/);
