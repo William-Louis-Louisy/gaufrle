@@ -36,31 +36,28 @@ h3 {
   backdrop-filter: grayscale(100%);
 }
 
+/*
+ * Victory celebration: vivid but readable in both themes.
+ * Light: dark text over pastels. Dark: light text over deep tones.
+ * The animation repeats twice, then reveals the original green success cell.
+ */
 @keyframes blink {
-  0% {
-    background-color: #cc35ea;
+  0%, 100% { background-color: #F0C96C; }
+  20% { background-color: #DDB3ED; }
+  40% { background-color: #A8D7F2; }
+  60% { background-color: #B8DFBF; }
+  80% { background-color: #F2B9CE; }
+}
+
+@keyframes blink-dark {
+  0%, 100% {
+    background-color: #5B237E;
+    color: #FBFBF2;
   }
-  14% {
-    background-color: #9252d7;
-  }
-  28% {
-    background-color: #8689d9;
-  }
-  42% {
-    background-color: #33658a;
-  }
-  56% {
-    background-color: #35c6ea;
-  }
-  70% {
-    background-color: #8689d9;
-  }
-  84% {
-    background-color: #9252d7;
-  }
-  100% {
-    background-color: #f218b8;
-  }
+  20% { background-color: #20547A; }
+  40% { background-color: #126960; }
+  60% { background-color: #754316; }
+  80% { background-color: #782B68; }
 }
 
 @keyframes bounce {
@@ -190,7 +187,16 @@ h3 {
 
 .blink-cell {
   @apply cell;
-  animation: blink 1.5s infinite;
+  /*
+   * The original .correct-cell green remains underneath the animation.
+   * A dark label also makes the resting green readable in dark mode.
+   */
+  color: #232629;
+  animation: blink 2.4s ease-in-out 2;
+}
+
+.dark .blink-cell {
+  animation-name: blink-dark;
 }
 
 .nav-link {
