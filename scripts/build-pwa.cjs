@@ -10,6 +10,8 @@ const REQUIRED_IMAGES = [
 const APP_SHELL = [
   "/index.html", "/manifest.json", "/favicon.ico",
   "/pwa-192.png", "/pwa-512.png",
+  "/normal-game/index.html", "/medium-game/index.html",
+  "/hard-game/index.html", "/support/index.html",
 ];
 
 function collectPrecacheUrls(dist = DIST) {
@@ -52,7 +54,10 @@ self.addEventListener("fetch", (event) => {
 
   if (request.mode === "navigate") {
     event.respondWith(fetch(request).catch(async () => {
-      const cached = await caches.match("/index.html");
+      const route = url.pathname.replace(/\/+$/, "") || "/";
+      const staticHtml = route === "/" ? "/index.html" : route + "/index.html";
+      const fallback = PRECACHE.includes(staticHtml) ? staticHtml : "/index.html";
+      const cached = await caches.match(fallback);
       return cached || Response.error();
     }));
     return;
