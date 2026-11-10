@@ -21,6 +21,8 @@ function fixture() {
   for (const file of [
     "index.html", "manifest.json", "favicon.ico",
     "pwa-192.png", "pwa-512.png",
+    "normal-game/index.html", "medium-game/index.html",
+    "hard-game/index.html", "support/index.html",
     "assets/index-a.js", "assets/index-b.css",
     "assets/NormalGamepage-c.js", "assets/HardGamepage-d.js",
     "assets/DefFiveLetters-big.js", "assets/DefSevenLetters-bigger.js",
@@ -36,6 +38,10 @@ test("precache contains the game routes, both dictionaries and all UI images", (
   const urls = collectPrecacheUrls(fixture());
   assert.ok(urls.includes("/index.html"));
   assert.ok(urls.includes("/manifest.json"));
+  assert.ok(urls.includes("/normal-game/index.html"));
+  assert.ok(urls.includes("/medium-game/index.html"));
+  assert.ok(urls.includes("/hard-game/index.html"));
+  assert.ok(urls.includes("/support/index.html"));
   assert.ok(urls.includes("/pwa-192.png"));
   assert.ok(urls.includes("/pwa-512.png"));
   assert.ok(urls.includes("/assets/NormalGamepage-c.js"));
@@ -55,7 +61,8 @@ test("worker uses versioned caches and provides an offline SPA navigation fallba
   const source = fs.readFileSync(path.join(dist, "sw.js"), "utf8");
   assert.match(source, /gaufrle-precache-[a-f0-9]{12}/);
   assert.match(source, /request\.mode === "navigate"/);
-  assert.match(source, /caches\.match\("\/index\.html"\)/);
+  assert.match(source, /PRECACHE\.includes\(staticHtml\)/);
+  assert.match(source, /route \+ "\/index\.html"/);
   assert.doesNotMatch(source, /skipWaiting/);
   assert.match(source, /DefFiveLetters-big/);
   assert.match(source, /\/images\/banner.webp/);
