@@ -1,0 +1,63 @@
+name: P2.3 vendor offline images (temporary)
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  images:
+    if: github.head_ref == 'feat/p2-3-pwa-offline-install' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --quiet pillow
+      - name: Download, validate and optimize all UI images
+        run: |
+          from pathlib import Path
+          from io import BytesIO
+          from urllib.request import Request, urlopen
+          from PIL import Image, ImageOps
+          
+          sources = {
+            "normal.webp": "https://ucarecdn.com/d3a18e9a-da74-4e57-a6a5-ae1e782706e6/-/preview/500x500/-/quality/smart/-/format/auto/",
+            "medium.webp": "https://ucarecdn.com/2d3b5c90-d564-41e9-b5f5-bb200aff634a/-/preview/500x500/-/quality/smart/-/format/auto/",
+            "hard.webp": "https://ucarecdn.com/4615a20f-db47-42e2-87f7-e808567f1b1d/-/preview/500x500/-/quality/smart/-/format/auto/",
+            "banner.webp": "https://ucarecdn.com/684b6b61-d0cf-4b04-9d3b-2c08891f6e4e/DALLE20231020173242Illustrationofa4K2DchibilandscapedepictingawhimsicalworldinhabitedbywafflesRollinghillsmadeoffluffybatterriversofsyrupandwa.png",
+            "mascot.webp": "https://ucarecdn.com/582f659c-89fe-413b-b273-49d84b9da0a3/-/preview/500x500/-/quality/smart/-/format/auto/",
+            "victory.webp": "https://ucarecdn.com/5020ce0f-690e-4c79-9e5c-6e40ee9ac4e6/-/preview/500x500/-/quality/smart/-/format/auto/",
+            "defeat.webp": "https://ucarecdn.com/aa5775bd-681c-4ddb-894d-4ba2dbea070a/-/preview/500x500/-/quality/smart/-/format/auto/"
+          }
+          output = Path("public/images")
+          output.mkdir(parents=True, exist_ok=True)
+          for filename, url in sources.items():
+              request = Request(url, headers={"User-Agent": "Mozilla/5.0", "Accept": "image/*"})
+              with urlopen(request, timeout=35) as response:
+                  data = response.read()
+              if len(data) < 1000:
+                  raise ValueError(f"Suspiciously small image: {filename}")
+              with Image.open(BytesIO(data)) as source:
+                  image = ImageOps.exif_transpose(source)
+                  image = image.convert("RGBA" if "A" in image.getbands() else "RGB")
+                  image.save(output / filename, "WEBP", quality=82, method=6)
+              assert (output / filename).stat().st_size > 1000, filename
+              print(f"{filename}: {(output / filename).stat().st_size} bytes")
+          
+      - name: Commit self-hosted image assets
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/images/*.webp
+          if ! git diff --cached --quiet; then
+            git commit -m "assets(pwa): self-host UI imagery for reliable offline usage"
+            git push origin HEAD:${{ github.head_ref }}
+          fi
