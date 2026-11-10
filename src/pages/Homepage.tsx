@@ -8,12 +8,12 @@ function Homepage() {
       <div className="flex flex-col items-center relative h-44 w-full mt-1">
         <img
           className="object-cover w-full h-full blur-[2px]"
-          src="https://ucarecdn.com/684b6b61-d0cf-4b04-9d3b-2c08891f6e4e/DALLE20231020173242Illustrationofa4K2DchibilandscapedepictingawhimsicalworldinhabitedbywafflesRollinghillsmadeoffluffybatterriversofsyrupandwa.png"
+          src="/images/banner.webp"
           alt="Le pays des gaufres"
         />
         <img
           className="w-32 h-32 absolute -bottom-2"
-          src="https://ucarecdn.com/582f659c-89fe-413b-b273-49d84b9da0a3/-/preview/500x500/-/quality/smart/-/format/auto/"
+          src="/images/mascot.webp"
           alt="La gaufre mascotte"
         />
       </div>
