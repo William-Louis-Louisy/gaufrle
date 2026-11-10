@@ -3,6 +3,10 @@ const path = require("node:path");
 const crypto = require("node:crypto");
 
 const DIST = path.resolve(__dirname, "../dist");
+const REQUIRED_IMAGES = [
+  "banner.webp", "defeat.webp", "hard.webp", "mascot.webp",
+  "medium.webp", "normal.webp", "victory.webp",
+];
 const APP_SHELL = [
   "/index.html", "/manifest.json", "/favicon.ico",
   "/pwa-192.png", "/pwa-512.png",
@@ -14,10 +18,7 @@ function collectPrecacheUrls(dist = DIST) {
     .sort()
     .map((name) => "/assets/" + name);
   const imagesDirectory = path.join(dist, "images");
-  const images = fs.readdirSync(imagesDirectory)
-    .filter((name) => /\.webp$/.test(name))
-    .sort()
-    .map((name) => "/images/" + name);
+  const images = REQUIRED_IMAGES.map((name) => "/images/" + name);
   return [...APP_SHELL, ...assets, ...images];
 }
 
@@ -103,4 +104,4 @@ function buildServiceWorker(dist = DIST) {
 }
 
 if (require.main === module) buildServiceWorker();
-module.exports = { collectPrecacheUrls, generateWorker, buildServiceWorker };
+module.exports = { collectPrecacheUrls, generateWorker, buildServiceWorker, REQUIRED_IMAGES };
