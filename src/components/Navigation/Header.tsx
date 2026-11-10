@@ -1,4 +1,5 @@
 import DarkModeToggle from "../DarkModeToggle";
+import { GAME_NAVIGATION } from "../../utils/GameNavigation";
 import { Dispatch, SetStateAction } from "react";
 import { FaCircleQuestion, FaBars } from "react-icons/fa6";
 import { Link, useLocation } from "react-router-dom";
@@ -13,29 +14,10 @@ function Header({ setModal, isMenuOpen, setIsMenuOpen }: HeaderProps) {
   const location = useLocation();
   const pathname = location.pathname;
 
-  const navigation = [
-    {
-      name: "Gaufrette",
-      href: "/normal-game",
-      current: pathname === "/normal-game",
-      imgSrc:
-        "/images/normal.webp",
-    },
-    {
-      name: "Gauf' au suc'",
-      href: "/medium-game",
-      current: pathname === "/medium-game",
-      imgSrc:
-        "/images/medium.webp",
-    },
-    {
-      name: "Gaufre salée",
-      href: "/hard-game",
-      current: pathname === "/hard-game",
-      imgSrc:
-        "/images/hard.webp",
-    },
-  ];
+  const navigation = GAME_NAVIGATION.map((item) => ({
+    ...item,
+    current: pathname === item.href,
+  }));
 
   const handleMenu = () => {
     setIsMenuOpen(!isMenuOpen);

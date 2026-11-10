@@ -2,15 +2,8 @@ import React from "react";
 import { FaChevronRight } from "react-icons/fa6";
 import { gridMetadata } from "../utils/CellStatus";
 import { Link } from "react-router-dom";
+import type { CtaHomeProps } from "../types/CtaHome";
 
-export interface CtaHomeProps {
-  mode: "normal" | "medium" | "hard";
-  title: string;
-  description: string;
-  cellsNumber: number;
-  colsNumber: string;
-  href: string;
-}
 
 function CtaHome({
   mode,
