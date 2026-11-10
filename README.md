@@ -52,7 +52,7 @@ Le serveur de prévisualisation utilise **http://localhost:4173**. Le service wo
 | Commande | Rôle |
 | --- | --- |
 | `npm run dev` | Démarrer Vite en développement (port 3000) |
-| `npm run build` | Vérifier TypeScript, compiler avec Vite, puis générer `dist/sw.js` |
+| `npm run build` | Vérifier TypeScript, compiler avec Vite, prérendre les cinq pages publiques et générer `dist/sw.js` |
 | `npm run preview` | Servir localement le build (port 4173) |
 | `npx tsc --noEmit` | Vérifier les types sans générer de fichiers |
 | `npm test` | Exécuter la suite Vitest une fois |
@@ -60,6 +60,7 @@ Le serveur de prévisualisation utilise **http://localhost:4173**. Le service wo
 | `npm run test:calendar` | Tester les calculs et validations du calendrier (Node) |
 | `npm run validate:grids` | Vérifier les dates et la continuité des trois catalogues |
 | `npm run test:pwa` | Tester la génération et la cohérence du cache PWA |
+| `npm run test:prerender` | Tester les métadonnées et le HTML statique des pages publiques |
 
 Pour reproduire l'ensemble des contrôles principaux avant une pull request :
 
@@ -70,6 +71,7 @@ npm run validate:grids
 npx tsc --noEmit
 npm test
 npm run test:pwa
+npm run test:prerender
 npm run build
 ```
 
@@ -160,10 +162,11 @@ Le manifest `public/manifest.json` décrit l'application installable et ses icô
 Le build `npm run build` :
 
 1. effectue le contrôle TypeScript et la compilation Vite dans `dist/` ;
-2. exécute `scripts/build-pwa.cjs` pour produire `dist/sw.js` ;
-3. constitue un précache versionné par empreinte des ressources : shell HTML, styles et scripts, **trois modes et catalogues**, **deux dictionnaires**, icônes et **sept illustrations locales**.
+2. exécute `scripts/prerender.cjs` pour générer du HTML spécifique aux cinq routes publiques et une page `404.html` marquée `noindex` ;
+3. exécute `scripts/build-pwa.cjs` pour produire `dist/sw.js` ;
+4. constitue un précache versionné par empreinte des ressources : shell HTML, styles et scripts, **trois modes et catalogues**, **deux dictionnaires**, icônes et **sept illustrations locales**.
 
-Le service worker utilise la navigation réseau avec repli sur `index.html` hors ligne pour les routes React Router. L'activation d'une mise à jour **n'est pas forcée** pendant une partie ; il peut être nécessaire de fermer les anciens onglets pour activer la nouvelle version. La première visite doit être effectuée **en ligne** pour installer et alimenter le cache. Le téléchargement initial inclut les dictionnaires volumineux ; il nécessite donc un peu de patience et d'espace disque.
+Le service worker privilégie le réseau puis utilise le HTML précaché correspondant à la route hors ligne (ou `index.html` en dernier recours). L'activation d'une mise à jour **n'est pas forcée** pendant une partie ; il peut être nécessaire de fermer les anciens onglets pour activer la nouvelle version. La première visite doit être effectuée **en ligne** pour installer et alimenter le cache. Le téléchargement initial inclut les dictionnaires volumineux ; il nécessite donc un peu de patience et d'espace disque.
 
 Les polices Google restent externes : si elles ne figurent pas déjà dans le cache du navigateur, les polices de secours CSS sont utilisées hors ligne.
 
@@ -178,7 +181,7 @@ Les polices Google restent externes : si elles ne figurent pas déjà dans le ca
 
 ## Déploiement Vercel
 
-Le projet est une **SPA statique**. Les paramètres attendus sont :
+Le projet est une **SPA React avec prérendu statique des pages publiques**. Les composants de l'accueil et du support sont rendus en HTML lors du build ; les trois modes génèrent leur état de chargement et leurs métadonnées SEO, sans figer la grille quotidienne ou hebdomadaire. React reprend ensuite la main avec `createRoot` (pas `hydrateRoot`). Les paramètres attendus sont :
 
 | Paramètre | Valeur |
 | --- | --- |
@@ -187,7 +190,7 @@ Le projet est une **SPA statique**. Les paramètres attendus sont :
 | Output Directory | `dist` |
 | Install Command | installation npm standard (`npm ci` en CI) |
 
-Le fichier `vercel.json` versionné fixe le framework, la commande de build, le répertoire de sortie et le **rewrite SPA vers `/index.html`** pour les navigations directes. Conservez ce rewrite : les routes `/normal-game`, `/medium-game` et `/hard-game` sont gérées côté React.
+Le fichier `vercel.json` route explicitement `/normal-game`, `/medium-game`, `/hard-game` et `/support` vers leurs HTML prérendus dans `dist/<route>/index.html`. La racine sert `dist/index.html`. Pour une URL inconnue, Vercel sert `dist/404.html` en **HTTP 404**, avec `robots: noindex,follow` et sans canonical. Ne réintroduisez pas de rewrite générique vers `/index.html` : il transformerait ces erreurs en HTTP 200 et masquerait les métadonnées propres à chaque page.
 
 Avant de fusionner une PR, contrôlez les checks GitHub ainsi que la **preview Vercel**. Ne supposez pas qu'un build réussi valide à lui seul l'installation PWA ou le fonctionnement hors ligne.
 
@@ -196,7 +199,7 @@ Avant de fusionner une PR, contrôlez les checks GitHub ainsi que la **preview V
 Le workflow [Validate grids and game sessions](.github/workflows/validate-grid-calendar.yml) s'exécute sur chaque pull request, sur les pushes vers `main` et manuellement depuis l'onglet Actions. Il comporte deux jobs :
 
 - **`validate`** : tests Node du calendrier (`npm run test:calendar`) et validation de tous les catalogues (`npm run validate:grids`).
-- **`session`** : `npm ci`, vérification TypeScript, tests Vitest, tests du générateur PWA et build de production.
+- **`session`** : `npm ci`, vérification TypeScript, tests Vitest, tests du générateur PWA, tests HTML prérendu et build de production.
 
 Les contrôles **`validate`** et **`session`** doivent être verts avant la fusion. Les règles de protection de `main` imposent la revue par PR ; une modification ne doit pas être poussée directement en production.
 
