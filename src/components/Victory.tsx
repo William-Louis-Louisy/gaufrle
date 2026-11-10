@@ -34,7 +34,7 @@ export default function Victory({ score, weekly = false }: VictoryProps) {
       <div className="flex flex-col items-center gap-4 max-h-24 md:max-h-32">
         <img
           className="max-h-full animate-bounce"
-          src="https://ucarecdn.com/5020ce0f-690e-4c79-9e5c-6e40ee9ac4e6/-/preview/500x500/-/quality/smart/-/format/auto/"
+          src="/images/victory.webp"
           alt="Une gaufre joyeuse"
         />
       </div>

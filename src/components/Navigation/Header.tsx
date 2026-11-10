@@ -19,21 +19,21 @@ function Header({ setModal, isMenuOpen, setIsMenuOpen }: HeaderProps) {
       href: "/normal-game",
       current: pathname === "/normal-game",
       imgSrc:
-        "https://ucarecdn.com/d3a18e9a-da74-4e57-a6a5-ae1e782706e6/-/preview/500x500/-/quality/smart/-/format/auto/",
+        "/images/normal.webp",
     },
     {
       name: "Gauf' au suc'",
       href: "/medium-game",
       current: pathname === "/medium-game",
       imgSrc:
-        "https://ucarecdn.com/2d3b5c90-d564-41e9-b5f5-bb200aff634a/-/preview/500x500/-/quality/smart/-/format/auto/",
+        "/images/medium.webp",
     },
     {
       name: "Gaufre salée",
       href: "/hard-game",
       current: pathname === "/hard-game",
       imgSrc:
-        "https://ucarecdn.com/4615a20f-db47-42e2-87f7-e808567f1b1d/-/preview/500x500/-/quality/smart/-/format/auto/",
+        "/images/hard.webp",
     },
   ];
 
