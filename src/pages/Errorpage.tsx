@@ -26,7 +26,7 @@ export default function Errorpage() {
 
       <img
         className="w-52 h-52 image-to-animate"
-        src="https://ucarecdn.com/fa67a4fe-58af-4103-a6e8-a57714a8ac07/-/preview/500x500/-/quality/smart/-/format/auto/"
+        src="/images/not-found.webp"
         alt="Une gaufre perdue"
       />
     </div>

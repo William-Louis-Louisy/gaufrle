@@ -164,11 +164,11 @@ Le build `npm run build` :
 1. effectue le contrôle TypeScript et la compilation Vite dans `dist/` ;
 2. exécute `scripts/prerender.cjs` pour générer du HTML spécifique aux cinq routes publiques et une page `404.html` marquée `noindex` ;
 3. exécute `scripts/build-pwa.cjs` pour produire `dist/sw.js` ;
-4. constitue un précache versionné par empreinte des ressources : shell HTML, styles et scripts, **trois modes et catalogues**, **deux dictionnaires**, icônes et **sept illustrations locales**.
+4. constitue un précache versionné par empreinte des ressources : shell HTML, styles et scripts, **trois modes et catalogues**, **deux dictionnaires**, icônes, **neuf illustrations locales** (dont Support et 404) et page `404.html`.
 
-Le service worker privilégie le réseau puis utilise le HTML précaché correspondant à la route hors ligne (ou `index.html` en dernier recours). L'activation d'une mise à jour **n'est pas forcée** pendant une partie ; il peut être nécessaire de fermer les anciens onglets pour activer la nouvelle version. La première visite doit être effectuée **en ligne** pour installer et alimenter le cache. Le téléchargement initial inclut les dictionnaires volumineux ; il nécessite donc un peu de patience et d'espace disque.
+Le service worker privilégie le réseau puis utilise le HTML précaché correspondant à la route hors ligne (ou `404.html` pour une route inconnue). L'activation d'une mise à jour **n'est pas forcée** pendant une partie ; il peut être nécessaire de fermer les anciens onglets pour activer la nouvelle version. La première visite doit être effectuée **en ligne** pour installer et alimenter le cache. Le téléchargement initial inclut les dictionnaires volumineux ; il nécessite donc un peu de patience et d'espace disque.
 
-Les polices Google restent externes : si elles ne figurent pas déjà dans le cache du navigateur, les polices de secours CSS sont utilisées hors ligne.
+Les polices Google restent externes : si elles ne figurent pas déjà dans le cache du navigateur, les polices de secours CSS sont utilisées hors ligne. Les illustrations des pages Support et 404 sont locales et mises en cache. Le widget de paiement Ko-fi sur la page Support nécessite toujours une connexion : l'application ne peut pas rendre ce service tiers disponible hors ligne.
 
 ### Recette manuelle PWA
 
@@ -177,7 +177,8 @@ Les polices Google restent externes : si elles ne figurent pas déjà dans le ca
 3. Passer hors ligne via **DevTools → Network → Offline** ou le mode avion.
 4. Ouvrir directement les routes `/normal-game`, `/medium-game` et `/hard-game` ; jouer et vérifier la reprise des parties.
 5. Après une victoire ou une défaite, vérifier les définitions et les images (navigation, mascotte, victoire, défaite).
-6. Rétablir le réseau, publier une nouvelle version et vérifier le changement de cache après fermeture des éventuels onglets utilisant l'ancienne version.
+6. Ouvrir `/support` et une route inconnue (ex. `/cette-page-nexiste-pas`) hors ligne : les illustrations doivent rester visibles ; le widget Ko-fi reste indisponible hors ligne.
+7. Rétablir le réseau, publier une nouvelle version et vérifier le changement de cache après fermeture des éventuels onglets utilisant l'ancienne version.
 
 ## Déploiement Vercel
 

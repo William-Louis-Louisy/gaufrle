@@ -6,9 +6,10 @@ const DIST = path.resolve(__dirname, "../dist");
 const REQUIRED_IMAGES = [
   "banner.webp", "defeat.webp", "hard.webp", "mascot.webp",
   "medium.webp", "normal.webp", "victory.webp",
+  "support.webp", "not-found.webp",
 ];
 const APP_SHELL = [
-  "/index.html", "/manifest.json", "/favicon.ico",
+  "/index.html", "/404.html", "/manifest.json", "/favicon.ico",
   "/pwa-192.png", "/pwa-512.png",
   "/normal-game/index.html", "/medium-game/index.html",
   "/hard-game/index.html", "/support/index.html",
@@ -56,7 +57,7 @@ self.addEventListener("fetch", (event) => {
     event.respondWith(fetch(request).catch(async () => {
       const route = url.pathname.replace(/\/+$/, "") || "/";
       const staticHtml = route === "/" ? "/index.html" : route + "/index.html";
-      const fallback = PRECACHE.includes(staticHtml) ? staticHtml : "/index.html";
+      const fallback = PRECACHE.includes(staticHtml) ? staticHtml : "/404.html";
       const cached = await caches.match(fallback);
       return cached || Response.error();
     }));
