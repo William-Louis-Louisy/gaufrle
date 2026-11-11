@@ -43,7 +43,7 @@ function renderDocument(template, page, content, structuredData, socialImage) {
     // on puzzle routes would waste bandwidth and compete with game bundles.
     const preload = document.createElement("link");
     preload.rel = "preload";
-    preload.as = "image";
+    preload.setAttribute("as", "image");
     preload.href = "/images/banner.webp";
     preload.setAttribute("fetchpriority", "high");
     document.head.appendChild(preload);
