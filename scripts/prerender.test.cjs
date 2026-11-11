@@ -79,3 +79,26 @@ test("unknown routes never expose canonical, indexable robots or structured data
   assert.equal(doc.querySelector('script[type="application/ld+json"]'), null);
   assert.equal(doc.querySelector("main h1").textContent, "404 Page non trouvée");
 });
+
+test("preloads the LCP candidate only on homepage and avoids competing game requests", () => {
+  const home = snapshot("/");
+  const game = snapshot("/hard-game");
+  const selector = 'link[rel="preload"][as="image"]';
+  const hint = home.head.querySelector(selector);
+  assert.ok(hint, "homepage banner should be discoverable before JavaScript");
+  assert.equal(hint.getAttribute("href"), "/images/banner.webp");
+  assert.equal(hint.getAttribute("fetchpriority"), "high");
+  assert.equal(home.head.querySelectorAll(selector).length, 1);
+  assert.equal(game.head.querySelector(selector), null);
+});
+
+test("the font request preserves the two families and display swap", () => {
+  const html = require("node:fs").readFileSync(
+    require("node:path").resolve(__dirname, "../index.html"), "utf8"
+  );
+  const stylesheets = [...html.matchAll(/href="(https:\/\/fonts\.googleapis\.com\/css2\?[^"]+)"/g)];
+  assert.equal(stylesheets.length, 1);
+  assert.ok(stylesheets[0][1].includes("family=Russo+One"));
+  assert.ok(stylesheets[0][1].includes("family=Titillium+Web:ital,wght@"));
+  assert.ok(stylesheets[0][1].includes("display=swap"));
+});
