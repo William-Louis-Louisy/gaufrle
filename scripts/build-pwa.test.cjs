@@ -19,7 +19,7 @@ function fixture() {
   fs.mkdirSync(path.join(dist, "assets"));
   fs.mkdirSync(path.join(dist, "images"));
   for (const file of [
-    "index.html", "manifest.json", "favicon.ico",
+    "index.html", "404.html", "manifest.json", "favicon.ico",
     "pwa-192.png", "pwa-512.png",
     "normal-game/index.html", "medium-game/index.html",
     "hard-game/index.html", "support/index.html",
@@ -28,6 +28,7 @@ function fixture() {
     "assets/DefFiveLetters-big.js", "assets/DefSevenLetters-bigger.js",
     "images/banner.webp", "images/defeat.webp", "images/hard.webp",
     "images/mascot.webp", "images/medium.webp", "images/normal.webp", "images/victory.webp",
+    "images/support.webp", "images/not-found.webp",
   ]) {
     fs.mkdirSync(path.dirname(path.join(dist, file)), { recursive: true });
     fs.writeFileSync(path.join(dist, file), file);
@@ -38,6 +39,7 @@ function fixture() {
 test("precache contains the game routes, both dictionaries and all UI images", () => {
   const urls = collectPrecacheUrls(fixture());
   assert.ok(urls.includes("/index.html"));
+  assert.ok(urls.includes("/404.html"));
   assert.ok(urls.includes("/manifest.json"));
   assert.ok(urls.includes("/normal-game/index.html"));
   assert.ok(urls.includes("/medium-game/index.html"));
@@ -53,7 +55,9 @@ test("precache contains the game routes, both dictionaries and all UI images", (
   assert.ok(urls.includes("/images/banner.webp"));
   assert.ok(urls.includes("/images/mascot.webp"));
   assert.ok(urls.includes("/images/victory.webp"));
-  assert.equal(urls.filter((url) => url.startsWith("/images/")).length, 7);
+  assert.ok(urls.includes("/images/support.webp"));
+  assert.ok(urls.includes("/images/not-found.webp"));
+  assert.equal(urls.filter((url) => url.startsWith("/images/")).length, 9);
 });
 
 test("worker uses versioned caches and provides an offline SPA navigation fallback", () => {
@@ -64,6 +68,7 @@ test("worker uses versioned caches and provides an offline SPA navigation fallba
   assert.match(source, /request\.mode === "navigate"/);
   assert.match(source, /PRECACHE\.includes\(staticHtml\)/);
   assert.match(source, /route \+ "\/index\.html"/);
+  assert.match(source, /PRECACHE\.includes\(staticHtml\) \? staticHtml : "\/404\.html"/);
   assert.doesNotMatch(source, /skipWaiting/);
   assert.match(source, /DefFiveLetters-big/);
   assert.match(source, /\/images\/banner.webp/);
@@ -90,4 +95,16 @@ test("build fails when a required local illustration is missing", () => {
   const dist = fixture();
   fs.rmSync(path.join(dist, "images/defeat.webp"));
   assert.throws(() => buildServiceWorker(dist), /Missing offline asset: \/images\/defeat.webp/);
+});
+
+test("build fails when the offline support artwork is missing", () => {
+  const dist = fixture();
+  fs.rmSync(path.join(dist, "images/support.webp"));
+  assert.throws(() => buildServiceWorker(dist), /Missing offline asset: \/images\/support.webp/);
+});
+
+test("build fails when the offline 404 document is missing", () => {
+  const dist = fixture();
+  fs.rmSync(path.join(dist, "404.html"));
+  assert.throws(() => buildServiceWorker(dist), /Missing offline asset: \/404.html/);
 });
