@@ -38,6 +38,16 @@ function renderDocument(template, page, content, structuredData, socialImage) {
   setMeta(document, "name", "description", page.description);
   setMeta(document, "name", "robots", page.url ? "index,follow" : "noindex,follow");
   if (page.url) setLink(document, "canonical", page.url);
+  if (page.pathname === "/") {
+    // Only the homepage displays this image above the fold. Preloading it
+    // on puzzle routes would waste bandwidth and compete with game bundles.
+    const preload = document.createElement("link");
+    preload.rel = "preload";
+    preload.as = "image";
+    preload.href = "/images/banner.webp";
+    preload.setAttribute("fetchpriority", "high");
+    document.head.appendChild(preload);
+  }
   setMeta(document, "property", "og:title", page.title);
   setMeta(document, "property", "og:description", page.description);
   if (page.url) setMeta(document, "property", "og:url", page.url);
